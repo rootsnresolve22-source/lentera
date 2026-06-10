@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Diagram } from './Illustrations'
 import Quiz from './Quiz'
 import Lamp from './Lamp'
+import { Celebrate } from './Fx'
 
 function Keys({ items }) {
   return (
@@ -152,6 +153,7 @@ export default function LessonView({ bab, nextBab, alreadyDone, onComplete, onBa
 
       {phase === 'selesai' && (
         <div className="done-card">
+          <Celebrate />
           <Lamp size={64} />
           <h1 className="done-title">Bab {bab.no} selesai!</h1>
           <p className="done-text">

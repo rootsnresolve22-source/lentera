@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { KeyboardMap } from './Illustrations'
+import { Celebrate } from './Fx'
 
 export const DRILL_LEVELS = [
   {
@@ -153,6 +154,7 @@ export default function TypingDrill({ bestLevel = 0, onPass, onBack }) {
     return (
       <div className="lesson">
         <div className="done-card">
+          {result.passed && <Celebrate />}
           <h1 className="done-title">{result.passed ? 'Level ' + level.no + ' lulus!' : 'Hampir!'}</h1>
           <div className="drill-stats">
             <div className="stat">

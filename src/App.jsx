@@ -112,9 +112,14 @@ export default function App() {
   if (!isAdmin && !progressMap['placement']) {
     return (
       <Placement
-        onDone={(payload) => {
+        onDone={async (payload) => {
           if (!payload) { go('dashboard'); return true }
-          return saveProgress('placement', 'selesai', payload.score, { meta: payload.meta })
+          let ok = await saveProgress('placement', 'selesai', payload.score, { meta: payload.meta })
+          for (const id of payload.tandaiSelesai ?? []) {
+            const r = await saveProgress(id, 'selesai', null, { meta: { via: 'placement' } })
+            ok = ok && r
+          }
+          return ok
         }}
       />
     )

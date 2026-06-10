@@ -46,7 +46,7 @@ export default function ModulePage({ progressMap, track = 'pemula', onOpenBab, o
                 <div className="step-head">
                   <span className="step-title">Bab {b.no} — {b.title}</span>
                   <span className={`chip ${done ? 'chip-done' : open ? 'chip-next' : 'chip-locked'}`}>
-                    {done ? 'Selesai' : open ? 'Belajar' : 'Terkunci'}
+                    {done ? (progressMap['m0.b' + b.no]?.meta?.via === 'placement' ? 'Lulus tes' : 'Selesai') : open ? 'Belajar' : 'Terkunci'}
                   </span>
                 </div>
                 <p className="step-desc">{b.desc}</p>

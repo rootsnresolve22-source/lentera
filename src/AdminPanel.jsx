@@ -61,7 +61,7 @@ function Rapor({ d, generatedAt, onBack }) {
               {d.placement
                 ? d.placement.meta?.skipped
                   ? 'Mulai dari nol (tes dilewati, jujur)'
-                  : `Skor ${d.placement.score} (benar ${d.placement.meta?.correct}/${d.placement.meta?.total})`
+                  : `Skor ${d.placement.score} (benar ${d.placement.meta?.correct}/${d.placement.meta?.total}, salah ${(d.placement.meta?.total ?? 0) - (d.placement.meta?.correct ?? 0)})`
                 : 'Belum'}
             </strong>
           </div>
@@ -95,7 +95,7 @@ function Rapor({ d, generatedAt, onBack }) {
               return (
                 <tr key={b.id}>
                   <td>Bab {b.no} — {b.title}</td>
-                  <td>{p?.status === 'selesai' ? 'Selesai' : p ? 'Berjalan' : 'Belum'}</td>
+                  <td>{p?.status === 'selesai' ? (p?.meta?.via === 'placement' ? 'Lulus penempatan' : 'Selesai') : p ? 'Berjalan' : 'Belum'}</td>
                   <td>{ketepatanBab(p) != null ? ketepatanBab(p) + '%' : '—'}</td>
                   <td>{fmtDetik(p?.seconds)}</td>
                   <td>{p?.attempts ?? '—'}</td>

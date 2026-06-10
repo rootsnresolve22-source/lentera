@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Diagram } from './Illustrations'
+import { CountUp, Celebrate } from './Fx'
 
 function shuffle(arr) {
   const a = [...arr]
@@ -88,10 +89,11 @@ export default function FinalTest({ test, bestScore, onFinish, onBack }) {
     return (
       <div className="lesson">
         <div className="done-card">
+          {result.passed && <Celebrate />}
           <h1 className="done-title">{result.passed ? 'LULUS!' : 'Belum lulus'}</h1>
           <div className="drill-stats">
             <div className="stat">
-              <span className="stat-num">{result.score}</span>
+              <CountUp value={result.score} className="stat-num" />
               <span className="stat-label">Nilai</span>
             </div>
             <div className="stat">

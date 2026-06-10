@@ -972,3 +972,132 @@ kbd {
   }
   .no-print { display: none !important; }
 }
+
+/* ===================== v0.4.0 — Animasi & rasa native ===================== */
+
+/* Transisi antar layar: tiap halaman dalam (.lesson) dan beranda masuk dengan lembut */
+@keyframes screenIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.lesson, .hello { animation: screenIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.progress-card, .path { animation: screenIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.05s; }
+
+/* Api lentera benar-benar berkedip */
+@keyframes flicker {
+  0%, 100% { transform: scale(1) translateY(0); opacity: 1; }
+  30% { transform: scale(1.06, 0.96) translateY(0.4px); opacity: 0.92; }
+  60% { transform: scale(0.95, 1.07) translateY(-0.6px); opacity: 1; }
+  80% { transform: scale(1.03, 0.98); opacity: 0.95; }
+}
+.lamp-flame {
+  animation: flicker 1.6s ease-in-out infinite;
+  transform-origin: 50% 68%;
+  transform-box: fill-box;
+}
+
+/* Tombol terasa "ditekan" */
+.btn-primary, .btn-ghost, .opt, .step-btn {
+  transition: transform 0.12s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+.btn-primary:hover { transform: translateY(-1.5px); box-shadow: 0 6px 16px rgba(232, 116, 12, 0.32); }
+.btn-primary:active { transform: translateY(0.5px) scale(0.98); box-shadow: none; }
+.btn-ghost:active, .opt:active { transform: scale(0.985); }
+
+/* Kartu langkah terangkat saat disentuh */
+.step-btn:not(:disabled):hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(31, 42, 51, 0.08);
+  border-color: var(--flame);
+}
+
+/* Jawaban benar: muncul memantul. Salah: terguncang. */
+@keyframes popIn {
+  0% { transform: scale(0.96); }
+  55% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+.opt-correct { animation: popIn 0.34s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+@keyframes shakeX {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(3px); }
+}
+.fx-shake { animation: shakeX 0.4s ease; }
+
+@keyframes fbIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.quiz-fb { animation: fbIn 0.26s ease both; }
+
+/* Titik progres kuis menyala berpindah */
+.dot { transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease; }
+.dot-now { transform: scale(1.15); }
+
+/* Kartu selesai muncul megah + jadi panggung partikel */
+.done-card { position: relative; overflow: hidden; animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* Hujan partikel perayaan */
+.celebrate { position: absolute; inset: 0; pointer-events: none; }
+@keyframes cfFall {
+  0% { transform: translateY(-30px) rotate(0deg); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: translateY(420px) rotate(540deg); opacity: 0; }
+}
+.cf {
+  position: absolute;
+  top: -10px;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  animation: cfFall 1.9s ease-in forwards;
+}
+.cf0 { background: var(--flame); }
+.cf1 { background: var(--sea); width: 8px; height: 8px; border-radius: 50%; }
+.cf2 { background: #f6c453; }
+.cf3 { background: var(--flame-deep); width: 6px; height: 12px; }
+.cf4 { background: #7fb7e0; border-radius: 50%; width: 7px; height: 7px; }
+.cf5 { background: var(--flame-soft); border: 1.5px solid var(--flame); }
+.cf6 { background: var(--sea-soft); border: 1.5px solid var(--sea); width: 10px; height: 10px; }
+
+/* Skor besar di hasil penempatan */
+.place-score { margin: 10px 0 2px; }
+.place-score-num { font-size: 52px; font-weight: 800; color: var(--flame-deep); line-height: 1; }
+.place-score-of { font-size: 17px; font-weight: 700; color: var(--ink-soft); }
+.place-pass { margin-top: 18px; }
+
+/* Huruf aktif latihan mengetik berdenyut seperti kursor */
+@keyframes caretPulse {
+  0%, 100% { border-bottom-color: var(--flame); }
+  50% { border-bottom-color: transparent; }
+}
+.ch-now { animation: caretPulse 0.9s steps(1) infinite; }
+
+/* Bar progres mengisi dengan kilau halus */
+.pc-bar-fill, .test-bar-fill { transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* Chip status muncul kecil */
+@keyframes chipIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.chip { animation: chipIn 0.3s ease both; }
+
+/* Baris tabel admin merespons */
+.admin-row td { transition: background 0.15s ease; }
+
+/* Hormati pengguna yang menyetel "kurangi gerakan" */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001s !important;
+  }
+  .lamp-flame { animation: none; }
+}
+
+/* Rapot dicetak: tanpa animasi & bayangan */
+@media print {
+  * { animation: none !important; transition: none !important; box-shadow: none !important; }
+}

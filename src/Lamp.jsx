@@ -27,6 +27,7 @@ export default function Lamp({ size = 56, flame = '#e8740c', line = '#1f2a33' })
         strokeLinejoin="round"
       />
       <path
+        className="lamp-flame"
         d="M24 19c2.6 3 3.9 5.2 3.9 7.4 0 2.6-1.7 4.6-3.9 4.6s-3.9-2-3.9-4.6c0-2.2 1.3-4.4 3.9-7.4Z"
         fill={flame}
       />

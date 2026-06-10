@@ -9,6 +9,7 @@ export default function Quiz({ questions, onFinish }) {
   const [solved, setSolved] = useState(false)
   const [wrong, setWrong] = useState(0)
   const [startAt] = useState(() => Date.now())
+  const [shake, setShake] = useState({ i: -1, t: 0 })
 
   const q = questions[idx]
   const last = idx === questions.length - 1
@@ -20,6 +21,7 @@ export default function Quiz({ questions, onFinish }) {
       setFeedback({ ok: true, text: q.explain || 'Benar!' })
     } else {
       setWrong(wrong + 1)
+      setShake({ i, t: Date.now() })
       const msg = (q.wrong && q.wrong[i]) || 'Belum tepat. Coba lagi — perhatikan baik-baik.'
       setFeedback({ ok: false, text: msg })
     }
@@ -32,6 +34,7 @@ export default function Quiz({ questions, onFinish }) {
       setFeedback({ ok: true, text: q.explain || 'Benar!' })
     } else {
       setWrong(wrong + 1)
+      setShake({ i: -2, t: Date.now() })
       const msg = (q.wrong && q.wrong[partId]) || 'Belum tepat. Coba klik bagian yang lain.'
       setFeedback({ ok: false, text: msg })
     }
@@ -64,7 +67,7 @@ export default function Quiz({ questions, onFinish }) {
       </p>
 
       {q.type === 'hotspot' && (
-        <div className="quiz-figure quiz-clickable">
+        <div key={shake.i === -2 ? 'f' + shake.t : 'f'} className={'quiz-figure quiz-clickable' + (shake.i === -2 ? ' fx-shake' : '')}>
           <Diagram kind={q.img.kind} props={q.img.props} onPart={handlePart} />
           {!solved && <p className="quiz-hint">Klik langsung pada gambar di atas.</p>}
         </div>
@@ -80,8 +83,8 @@ export default function Quiz({ questions, onFinish }) {
           <div className="quiz-options">
             {q.options.map((opt, i) => (
               <button
-                key={i}
-                className={`opt ${solved && i === q.answer ? 'opt-correct' : ''}`}
+                key={shake.i === i ? 'o' + i + '-' + shake.t : 'o' + i}
+                className={`opt ${solved && i === q.answer ? 'opt-correct' : ''}${shake.i === i ? ' fx-shake' : ''}`}
                 onClick={() => handleMc(i)}
                 disabled={solved && i !== q.answer}
               >
@@ -94,7 +97,7 @@ export default function Quiz({ questions, onFinish }) {
       )}
 
       {feedback && (
-        <div className={`quiz-fb ${feedback.ok ? 'fb-ok' : 'fb-no'}`} role="status">
+        <div key={feedback.text + wrong} className={`quiz-fb ${feedback.ok ? 'fb-ok' : 'fb-no'}`} role="status">
           {feedback.text}
         </div>
       )}
