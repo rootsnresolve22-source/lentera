@@ -4,6 +4,9 @@
 
 import { MODUL0, M0_ITEMS } from './modul0'
 import { MODUL1, M1_ITEMS } from './modul1'
+import { MODUL2, M2_ITEMS } from './modul2'
+import { MODUL3, M3_ITEMS } from './modul3'
+import { MODUL4, M4_ITEMS } from './modul4'
 
 export const MODULES = [
   {
@@ -25,6 +28,42 @@ export const MODULES = [
       desc: 'Terbuka setelah ujian akhir Modul 0 lulus (nilai 85).',
     },
     dashDesc: 'Mengetik dokumen, Ctrl+S jadi refleks, merapikan, daftar, mencetak & PDF.',
+  },
+  {
+    module: MODUL2,
+    items: M2_ITEMS,
+    hasDrill: false,
+    hasPdf: false,
+    gate: {
+      finalItem: 'm1.praktik',
+      label: 'Lulus ujian praktek Modul 1 dulu',
+      desc: 'Terbuka setelah ujian praktek Word (Modul 1) lulus.',
+    },
+    dashDesc: 'Tabel, rumus, dan rekap angka — kalkulator raksasa kantor.',
+  },
+  {
+    module: MODUL3,
+    items: M3_ITEMS,
+    hasDrill: false,
+    hasPdf: false,
+    gate: {
+      finalItem: 'm2.praktik',
+      label: 'Lulus ujian praktek Modul 2 dulu',
+      desc: 'Terbuka setelah ujian praktek Excel (Modul 2) lulus.',
+    },
+    dashDesc: 'Slide presentasi: tampil meyakinkan di depan orang.',
+  },
+  {
+    module: MODUL4,
+    items: M4_ITEMS,
+    hasDrill: false,
+    hasPdf: false,
+    gate: {
+      finalItem: 'm3.praktik',
+      label: 'Lulus ujian praktek Modul 3 dulu',
+      desc: 'Terbuka setelah ujian praktek PowerPoint (Modul 3) lulus.',
+    },
+    dashDesc: 'Email, PDF, cetak-pindai, internet sehat — siap kerja penuh.',
   },
 ]
 

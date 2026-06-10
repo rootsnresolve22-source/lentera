@@ -43,3 +43,6 @@ valid as a React child") padahal kode benar — karena bundler menarik salinan R
 yang berbeda dari milik proyek.
 Aturan: semua skrip verifikasi/render diletakkan di `scripts/` dalam proyek dengan
 import relatif, sehingga memakai dependensi yang sama persis dengan aplikasi.
+
+## P9 — Audit medan sebelum menulis (pasca-kompaksi)
+Setelah kompaksi konteks, pekerjaan "tersembunyi" bisa sudah ada di disk (modul2.js, ExcelDiagram, PowerPointDiagram ditemukan sudah ditulis sebagian). Menulis buta menghasilkan duplikat deklarasi (build pecah) atau menimpa karya. Aturan: SELALU `ls` + `grep` penanda sebelum create/patch; bila fungsi serupa ganda, pilih satu sumber kebenaran dan hapus sisanya. Temuan turut: sensus terprogram accept-vs-parts menangkap hotspot `titlebox` yang tidak ada partnya — verifikasi mesin menyelamatkan peserta dari soal yang mustahil dijawab. Catatan jujur: inspeksi mata ilustrasi Excel/PPT didelegasikan ke checklist pengujian Dimas demi hemat konteks.

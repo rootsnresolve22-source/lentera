@@ -858,9 +858,19 @@ export function PowerPointDiagram({ highlight = [], onPart = null }) {
         <title>Slide yang sedang disunting</title>
         <rect x="116" y="84" width="324" height="196" rx="4"
           fill={hot('slidearea') ? C.flameSoft : '#fff'} stroke={C.ink} strokeWidth="1.6" />
-        <rect x="140" y="104" width="276" height="38" rx="3" fill="none" stroke={C.faint} strokeWidth="1.2" strokeDasharray="5 4" />
+      </g>
+      <g {...partProps('titlebox', onPart)}>
+        <title>Kotak judul slide</title>
+        <rect x="140" y="104" width="276" height="38" rx="3"
+          fill={hot('titlebox') ? C.flameSoft : '#fff'}
+          stroke={hot('titlebox') ? C.flame : C.faint} strokeWidth={hot('titlebox') ? 1.8 : 1.2} strokeDasharray="5 4" />
         <text x="278" y="128" textAnchor="middle" fontSize="13" fontWeight="800" fill={C.ink}>PERKENALAN DIRI</text>
-        <rect x="140" y="156" width="276" height="104" rx="3" fill="none" stroke={C.faint} strokeWidth="1.2" strokeDasharray="5 4" />
+      </g>
+      <g {...partProps('bodybox', onPart)}>
+        <title>Kotak isi slide (butir-butir)</title>
+        <rect x="140" y="156" width="276" height="104" rx="3"
+          fill={hot('bodybox') ? C.flameSoft : '#fff'}
+          stroke={hot('bodybox') ? C.flame : C.faint} strokeWidth={hot('bodybox') ? 1.8 : 1.2} strokeDasharray="5 4" />
         <g stroke={C.line} strokeWidth="4" strokeLinecap="round">
           <line x1="156" y1="176" x2="380" y2="176" />
           <line x1="156" y1="194" x2="350" y2="194" />

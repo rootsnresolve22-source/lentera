@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **0.7.0 · D1 — Praktek, Kamus Pintasan, M1 Diperdalam**
+- Versi: **1.0.0 · Ready to Launch — Kurikulum Lengkap M0–M4**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -26,7 +26,7 @@ created by **Mohammad Dimas Priambodo**
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.7.0 · D1 — Praktek, Kamus Pintasan, M1 Diperdalam**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v1.0.0 · Ready to Launch — Kurikulum Lengkap M0–M4**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
@@ -41,3 +41,11 @@ Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa
 - **Ujian praktek Modul 1**: peserta membuat dokumen Word sungguhan (Surat Izin) lalu mengunggah file `.docx` — dinilai otomatis 7 butir rubrik (lulus 80), hasil per butir transparan dengan saran perbaikan. Berkas baru: `src/SubmissionTest.jsx`.
 - **Kamus Pintasan**: glosarium hotkeys lengkap 8 kategori (~75 entri, bilingual Inggris-layar/Indonesia), bebas diakses semua peserta dari beranda, bisa dicari dan dicetak. Berkas baru: `src/HotkeysPage.jsx`, `src/content/hotkeys.js`.
 - **Modul 1 diperdalam (v2)**: materi lebih panjang dan bilingual berpasangan (Print/Cetak, Save/Simpan), F12 dan Ctrl+W/Ctrl+H/Shift+F3 dibahas, 36 kuis; alur baru: bab → ujian praktek → ujian teori.
+
+## Baru di v1.0.0 — Ready to Launch
+- **Modul 2 — Excel dasar** (10 langkah): 8 bab, 28 kuis, ujian praktek unggah .xlsx (6 rubrik: header, 5 baris data, rumus, perkalian, SUM), ujian teori 15 soal.
+- **Modul 3 — PowerPoint dasar** (9 langkah): 7 bab, 28 kuis, ujian praktek unggah .pptx (5 rubrik: 3 slide, judul, butir, 30 kata), ujian teori 15 soal.
+- **Modul 4 — Pelengkap kerja** (7 langkah): email, lampiran & Reply All, PDF, cetak-pindai, internet sehat & phishing, etika digital + Win+L. Ujian teori 15 soal.
+- **Mesin praktek multi-format**: pembongkar .docx/.xlsx/.pptx di browser, penilaian per rubrik dengan saran perbaikan.
+- **Gerbang berantai penuh**: M1 dibuka ujian M0 → M2 dibuka praktek Word → M3 dibuka praktek Excel → M4 dibuka praktek PowerPoint.
+- Ilustrasi PowerPoint kini punya kotak judul/isi yang dapat diklik; rapot & panel admin mencakup M0–M4.

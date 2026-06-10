@@ -7,11 +7,7 @@ import { jalurLabel } from './score'
 
 // Tahapan yang belum dibangun — sekadar peta jalan di beranda.
 const LOCKED_STEPS = [
-  { no: '2', title: 'Excel dasar', desc: 'Tabel, angka, dan rumus pertamamu.' },
-  { no: '3', title: 'PowerPoint dasar', desc: 'Membuat slide presentasi sederhana.' },
-  { no: '4', title: 'Tingkat menengah', desc: 'Word, Excel & PowerPoint untuk pekerjaan kantor sehari-hari.' },
-  { no: '5', title: 'Tingkat mahir + ujian akhir', desc: 'Mail merge, VLOOKUP, laporan, dan simulasi satu hari kerja.' },
-  { no: '6', title: 'Pelengkap', desc: 'Email profesional, PDF, internet sehat, print & scan.' },
+  { no: '★', title: 'Jenjang menengah & mahir', desc: 'Mail merge, VLOOKUP, simulasi satu hari kerja — dibuka setelah peluncuran.' },
 ]
 
 // Pesan motivasi kontekstual — sederhana, hangat, tidak menghakimi.

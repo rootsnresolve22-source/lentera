@@ -225,7 +225,7 @@ export default function AdminPanel({ token, onBack }) {
             <table className="admin-tab">
               <thead>
                 <tr>
-                  <th>Peserta</th><th>Jalur</th><th>Langkah</th><th>Ujian M0/M1</th><th>Ketik</th>
+                  <th>Peserta</th><th>Jalur</th><th>Langkah</th><th>Ujian M0–M4</th><th>Ketik</th>
                   <th>Indeks</th><th>Hadir 14h</th><th>Masuk 30h</th><th>Terakhir aktif</th>
                 </tr>
               </thead>
@@ -235,7 +235,7 @@ export default function AdminPanel({ token, onBack }) {
                     <td><strong>{p.user.full_name}</strong><br /><span className="admin-sub">{p.user.username}</span></td>
                     <td>{jalurLabel(p.track)}</td>
                     <td>{p.skor.langkahSelesai}/{p.skor.totalLangkah}</td>
-                    <td>{p.skor.finals.m0 ?? '—'} / {p.skor.finals.m1 ?? '—'}</td>
+                    <td>{['m0', 'm1', 'm2', 'm3', 'm4'].map((k) => p.skor.finals[k] ?? '—').join(' / ')}</td>
                     <td>{p.skor.drillLevel ? 'L' + p.skor.drillLevel : '—'}</td>
                     <td><strong>{p.skor.indeks}</strong> <span className="admin-sub">{p.skor.predikat}</span></td>
                     <td>{p.activity14.daysActive} hr · {fmtMenit(p.activity14.minutes)}</td>
