@@ -71,6 +71,42 @@ Deno.serve(async (req) => {
       })
     }
 
+    if (req.method === 'POST' && path === 'progress') {
+      const user = await getUser(req.headers.get('x-session'))
+      if (!user) return json({ error: 'Sesi berakhir. Silakan masuk lagi.' }, 401)
+      let body: Record<string, unknown> = {}
+      try { body = await req.json() } catch (_e) { body = {} }
+      const itemId = String(body.item_id ?? '').trim()
+      const status = String(body.status ?? 'selesai')
+      const rawScore = body.score
+      const score = rawScore === null || rawScore === undefined ? null : Number(rawScore)
+      if (!itemId || itemId.length > 60) return json({ error: 'item_id tidak valid.' }, 400)
+      if (!['belum', 'sedang', 'selesai'].includes(status)) return json({ error: 'status tidak valid.' }, 400)
+      if (score !== null && (!Number.isFinite(score) || score < 0 || score > 1000)) {
+        return json({ error: 'score tidak valid.' }, 400)
+      }
+      const { data: existing } = await supabase
+        .from('belajar_progress')
+        .select('score, status')
+        .eq('user_id', user.id as string)
+        .eq('item_id', itemId)
+        .maybeSingle()
+      let bestScore: number | null = score
+      if (existing && existing.score !== null && existing.score !== undefined) {
+        bestScore = score === null ? Number(existing.score) : Math.max(Number(existing.score), score)
+      }
+      const finalStatus = existing && existing.status === 'selesai' ? 'selesai' : status
+      const { error: upErr } = await supabase.from('belajar_progress').upsert({
+        user_id: user.id as string,
+        item_id: itemId,
+        status: finalStatus,
+        score: bestScore,
+        updated_at: new Date().toISOString(),
+      })
+      if (upErr) { console.error('progress_error', upErr); return json({ error: 'Gagal menyimpan progres.' }, 500) }
+      return json({ ok: true, item_id: itemId, status: finalStatus, score: bestScore })
+    }
+
     if (req.method === 'POST' && path === 'logout') {
       const token = req.headers.get('x-session')
       if (token) await supabase.from('belajar_sessions').delete().eq('token', token)

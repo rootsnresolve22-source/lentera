@@ -1,47 +1,25 @@
-# Lentera — Belajar Komputer dari Nol
+# Lentera
 
-Aplikasi belajar komputer untuk warga kampung (PWA), target kemahiran level
-administrative assistant / personal assistant / purchasing staff.
+Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
+created by **Mohammad Dimas Priambodo**
 
 ## Status
+- Versi: **0.2.0 · Bundle 1 — Modul 0**
+- Produksi: Vercel (auto-build dari repo ini)
+- Backend: Supabase Edge Function `belajar-api` **v2** (login, me, progress, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
+- Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
 
-v0.1.1 — Paket 0 (Fondasi): login, akun, struktur database, deploy, kredit pembuat.
+## Fitur v0.2.0
+- Modul 0 lengkap: 7 bab bergambar (laptop, mouse/touchpad, keyboard, jendela, file & folder, WiFi, mengetik 10 jari)
+- Kuis di tiap bab (27 soal): pilihan ganda + klik-gambar, salah boleh diulang dengan penjelasan
+- Latihan mengetik 10 jari 3 level dengan papan ketik penunjuk (akurasi minimal 90%)
+- Ujian akhir 16 soal, lulus 85, soal & opsi diacak, pembahasan untuk soal yang salah, boleh mengulang
+- Progres tersimpan per akun di database; bab terkunci berurutan
+- PWA: bisa di-install di HP/laptop
 
-## Arsitektur
+## Cara deploy
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.2.0 · Bundle 1 — Modul 0**.
 
-- Frontend: React + Vite (PWA, mobile-first), tanpa framework UI tambahan.
-- Backend: Supabase Edge Function `belajar-api` (project `dashboard-kendali`,
-  ref `soxirtpifyomksjsxixt`) — semua akses data lewat fungsi ini dengan
-  service role. Frontend tidak membawa kunci API Supabase sama sekali.
-- Database: tabel berprefix `belajar_` di schema public, RLS aktif tanpa
-  policy (akses anon/authenticated tertutup penuh; hanya service role).
-
-## Tabel
-
-- `belajar_users` — id, username (unik), pin_hash (bcrypt), full_name,
-  role (peserta/admin), active.
-- `belajar_sessions` — token sesi, kedaluwarsa 60 hari.
-- `belajar_progress` — progres per item per user (dipakai mulai Paket 1).
-
-## Endpoint (Edge Function `belajar-api`)
-
-- `POST /login` — body `{ username, pin }` → `{ token, user }`.
-- `GET /me` — header `x-session: <token>` → `{ user, progress }`.
-- `POST /logout` — header `x-session` → `{ ok: true }`.
-
-Catatan keamanan: `verify_jwt` sengaja dimatikan karena fungsi ini memakai
-autentikasi sendiri (username + PIN bcrypt + token sesi di tabel). PIN salah
-diberi jeda 400 ms untuk memperlambat tebak-tebakan.
-
-## Menjalankan lokal
-
-```
-npm install
-npm run dev
-```
-
-## Keterbatasan yang disadari (v0.1.0)
-
-- Belum ada UI ganti PIN (perubahan PIN sementara lewat SQL oleh admin).
-- Belum ada pembatasan jumlah percobaan login (baru jeda 400 ms).
-- Konten modul belum ada — menyusul di Paket 1.
+## Keterbatasan yang diketahui (by design)
+- Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
+- Versi PDF modul menyusul di bundle berikutnya, dibangkitkan dari sumber konten yang sama (`src/content/modul0.js`)

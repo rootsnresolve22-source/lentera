@@ -29,3 +29,6 @@ export const login = (username, pin) =>
 export const me = (token) => request('me', { token })
 
 export const logout = (token) => request('logout', { method: 'POST', token })
+
+export const saveProgress = (token, item_id, status, score = null) =>
+  request('progress', { method: 'POST', token, body: { item_id, status, score } })
