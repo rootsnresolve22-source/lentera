@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **0.5.0 · Bundle 2 — PDF Modul 0**
+- Versi: **0.6.0 · Bundle 3 — Word Dasar**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -19,11 +19,14 @@ created by **Mohammad Dimas Priambodo**
 - Panel Admin (khusus admin): tabel semua peserta + Indeks Lentera (Penguasaan 50% · Ketelitian 20% · Kecepatan 15% · Kerajinan 15%)
 - Rapot per peserta siap CETAK: identitas & jalur, rincian per langkah, kehadiran, catatan otomatis (termasuk pertumbuhan dari skor penempatan), area tanda tangan
 - Animasi native-feel: transisi layar, api lentera berkedip, guncangan jawaban salah, perayaan partikel saat lulus, skor berhitung naik — otomatis nonaktif bila pengguna menyetel "kurangi gerakan"
+- Modul 1 — Word dasar: 8 bab bergambar (jendela Word, Save As, Print), 31 kuis, ujian akhir 18 soal lulus 85; terbuka setelah lulus ujian Modul 0
+- Arsitektur multi-modul (`src/content/index.js`): menambah modul baru cukup satu entri registry — beranda, halaman modul, Indeks, dan rapot mengikuti otomatis
+- Indeks Lentera lintas modul: hanya modul yang TERBUKA bagi peserta yang dihitung; ujian yang belum ditempuh tidak menghukum nilai
 - Buku saku PDF Modul 0 (31 halaman, A4) di `public/Lentera-Modul-0.pdf` + tombol unduh di halaman Modul 0 — dibangkitkan dari sumber konten yang sama
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.5.0 · Bundle 2 — PDF Modul 0**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.6.0 · Bundle 3 — Word Dasar**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)

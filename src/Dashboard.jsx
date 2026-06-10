@@ -1,10 +1,12 @@
 import Lamp from './Lamp'
 import { APP_VERSION } from './config'
-import { MODUL0, M0_ITEMS } from './content/modul0'
+import {
+  MODULES, itemDone, moduleUnlocked, moduleDoneCount, moduleComplete, activeEntry,
+} from './content'
 import { jalurLabel } from './score'
 
+// Tahapan yang belum dibangun — sekadar peta jalan di beranda.
 const LOCKED_STEPS = [
-  { no: '1', title: 'Word dasar', desc: 'Mengetik surat, merapikan tulisan, menyimpan, mencetak.' },
   { no: '2', title: 'Excel dasar', desc: 'Tabel, angka, dan rumus pertamamu.' },
   { no: '3', title: 'PowerPoint dasar', desc: 'Membuat slide presentasi sederhana.' },
   { no: '4', title: 'Tingkat menengah', desc: 'Word, Excel & PowerPoint untuk pekerjaan kantor sehari-hari.' },
@@ -12,18 +14,12 @@ const LOCKED_STEPS = [
   { no: '6', title: 'Pelengkap', desc: 'Email profesional, PDF, internet sehat, print & scan.' },
 ]
 
-function itemDone(progressMap, id) {
-  const p = progressMap[id]
-  if (!p) return false
-  if (id === 'm0.drill') return Number(p.score ?? 0) >= 1
-  if (id === 'm0.final') return Number(p.score ?? 0) >= MODUL0.final.pass
-  return p.status === 'selesai'
-}
-
 // Pesan motivasi kontekstual — sederhana, hangat, tidak menghakimi.
-function pesanMotivasi({ done, total, streak, daysActive, finalBest }) {
-  if (done === total) return 'Modul 0 tuntas. Kamu resmi sudah kenal komputer — Word dasar segera menyusul!'
-  if (finalBest != null && finalBest < MODUL0.final.pass)
+function pesanMotivasi({ aktif, done, allComplete, streak, daysActive, finalAktif }) {
+  if (allComplete) return 'Semua modul yang tersedia sudah tuntas. Excel dasar segera menyusul — istirahat dulu, kamu pantas bangga!'
+  if (aktif.module.id === 'm1' && done === 0)
+    return 'Modul 0 tuntas dan gerbang Word terbuka. Dokumen pertamamu menunggu di Bab 1!'
+  if (finalAktif != null && finalAktif < aktif.module.final.pass)
     return 'Nilai ujianmu hampir sampai — buka lagi bab yang masih ragu, lalu coba lagi. Kamu pasti bisa.'
   if (streak >= 3) return `Hebat, ${streak} hari berturut-turut! Api yang dijaga setiap hari tidak akan padam.`
   if (daysActive === 0 && done > 0) return 'Sudah beberapa hari tidak berlatih — yuk nyalakan lagi, 10 menit saja hari ini.'
@@ -33,15 +29,20 @@ function pesanMotivasi({ done, total, streak, daysActive, finalBest }) {
 
 export default function Dashboard({ user, progressMap, activity, track, onLogout, onOpenModule, onOpenAdmin }) {
   const firstName = (user.full_name || user.username).split(' ')[0]
-  const done = M0_ITEMS.filter((id) => itemDone(progressMap, id)).length
-  const total = M0_ITEMS.length
+
+  const aktif = activeEntry(progressMap)
+  const done = moduleDoneCount(progressMap, aktif)
+  const total = aktif.items.length
   const pct = Math.round((done / total) * 100)
   const started = done > 0
-  const m0Complete = done === total
-  const finalBest = progressMap['m0.final']?.score ?? null
+  const allComplete = MODULES.every((e) => moduleComplete(progressMap, e))
+  const namaAktif = aktif.module.title.split(' — ')[0]
+  const finalAktif = progressMap[aktif.module.final.id]?.score ?? null
+  const finalM0 = progressMap['m0.final']?.score ?? null
+  const finalM1 = progressMap['m1.final']?.score ?? null
   const streak = activity?.streak ?? 0
   const daysActive = activity?.daysActive ?? 0
-  const pesan = pesanMotivasi({ done, total, streak, daysActive, finalBest })
+  const pesan = pesanMotivasi({ aktif, done, allComplete, streak, daysActive, finalAktif })
 
   return (
     <div className="shell">
@@ -79,20 +80,23 @@ export default function Dashboard({ user, progressMap, activity, track, onLogout
         </div>
         <div>
           <h2>
-            {m0Complete
-              ? 'Modul 0 tuntas — luar biasa!'
+            {allComplete
+              ? 'Semua modul tuntas — luar biasa!'
               : started
-              ? `${done} dari ${total} langkah Modul 0 selesai`
+              ? `${done} dari ${total} langkah ${namaAktif} selesai`
+              : aktif.module.id === 'm1'
+              ? 'Gerbang baru terbuka: Word!'
               : 'Perjalananmu dimulai hari ini'}
           </h2>
-          {started && !m0Complete && (
+          {started && !allComplete && (
             <div className="pc-bar"><div className="pc-bar-fill" style={{ width: pct + '%' }} /></div>
           )}
           <p>{pesan}</p>
           <div className="pc-meta">
             <span>Hadir {daysActive} hari (14 hari terakhir)</span>
             {streak >= 2 && <span>· Beruntun {streak} hari</span>}
-            {finalBest != null && <span>· Nilai ujian terbaik: {finalBest}</span>}
+            {finalM0 != null && <span>· Ujian M0: {finalM0}</span>}
+            {finalM1 != null && <span>· Ujian M1: {finalM1}</span>}
           </div>
         </div>
       </div>
@@ -100,20 +104,40 @@ export default function Dashboard({ user, progressMap, activity, track, onLogout
       <p className="section-label">Jalur belajar</p>
 
       <div className="path">
-        <div className={`step ${m0Complete ? 'is-done' : 'is-next'}`}>
-          <span className="step-dot" aria-hidden="true" />
-          <button className="step-card step-btn" onClick={onOpenModule}>
-            <div className="step-head">
-              <span className="step-title">Modul 0 — Dasar komputer</span>
-              <span className={`chip ${m0Complete ? 'chip-done' : 'chip-next'}`}>
-                {m0Complete ? 'Selesai' : started ? `Lanjut ${done}/${total}` : 'Mulai'}
-              </span>
+        {MODULES.map((e) => {
+          const unlocked = moduleUnlocked(progressMap, e)
+          const mDone = moduleDoneCount(progressMap, e)
+          const mTotal = e.items.length
+          const complete = mDone === mTotal
+          if (!unlocked) {
+            return (
+              <div key={e.module.id} className="step is-locked">
+                <span className="step-dot" aria-hidden="true" />
+                <div className="step-card">
+                  <div className="step-head">
+                    <span className="step-title">{e.module.title}</span>
+                    <span className="chip chip-locked">{e.gate.label}</span>
+                  </div>
+                  <p className="step-desc">{e.gate.desc}</p>
+                </div>
+              </div>
+            )
+          }
+          return (
+            <div key={e.module.id} className={`step ${complete ? 'is-done' : 'is-next'}`}>
+              <span className="step-dot" aria-hidden="true" />
+              <button className="step-card step-btn" onClick={() => onOpenModule(e.module.id)}>
+                <div className="step-head">
+                  <span className="step-title">{e.module.title}</span>
+                  <span className={`chip ${complete ? 'chip-done' : 'chip-next'}`}>
+                    {complete ? 'Selesai' : mDone > 0 ? `Lanjut ${mDone}/${mTotal}` : 'Mulai'}
+                  </span>
+                </div>
+                <p className="step-desc">{e.dashDesc}</p>
+              </button>
             </div>
-            <p className="step-desc">
-              Laptop, mouse, keyboard, file & folder, WiFi, keamanan, mengetik 10 jari.
-            </p>
-          </button>
-        </div>
+          )
+        })}
 
         {LOCKED_STEPS.map((s) => (
           <div key={s.no} className="step is-locked">

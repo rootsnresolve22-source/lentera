@@ -491,6 +491,9 @@ export function WifiPanel({ highlight = [], onPart = null }) {
 
 const MAP = {
   keyboard: KeyboardMap,
+  word: WordDiagram,
+  savedialog: SaveDialog,
+  printdialog: PrintDialog,
   mouse: MouseDiagram,
   touchpad: TouchpadDiagram,
   laptop: LaptopDiagram,
@@ -504,4 +507,210 @@ export function Diagram({ kind, props = {}, onPart = null }) {
   const Comp = MAP[kind]
   if (!Comp) return null
   return <Comp {...props} onPart={onPart} />
+}
+
+/* ================= WORD (jendela utama) ================= */
+
+export function WordDiagram({ highlight = [], onPart = null }) {
+  const hot = (id) => highlight.includes(id)
+  const btn = (id, x, y, w, title, children) => (
+    <g key={id} {...partProps(id, onPart)}>
+      <title>{title}</title>
+      <rect x={x} y={y} width={w} height={24} rx={5}
+        fill={hot(id) ? C.flame : C.paper} stroke={hot(id) ? C.flame : C.line} strokeWidth="1.4" />
+      <g fill={hot(id) ? '#fff' : C.ink} stroke={hot(id) ? '#fff' : C.ink}>{children}</g>
+    </g>
+  )
+  const alignLines = (x, widths, yBase) =>
+    widths.map((w, i) => (
+      <line key={i} x1={x[i] ?? x[0]} y1={yBase + 6 + i * 4.5} x2={(x[i] ?? x[0]) + w} y2={yBase + 6 + i * 4.5}
+        strokeWidth="1.8" strokeLinecap="round" />
+    ))
+  return (
+    <svg viewBox="0 0 460 330" className="diagram" role="img" aria-label="Gambar jendela Microsoft Word">
+      <rect x="4" y="4" width="452" height="322" rx="10" fill={C.paper} stroke={C.ink} strokeWidth="2.5" />
+      {/* Bilah judul + Quick Access */}
+      <rect x="4" y="4" width="452" height="30" rx="10" fill="#1f5cb0" />
+      <rect x="4" y="22" width="452" height="12" fill="#1f5cb0" />
+      <g {...partProps('save', onPart)}>
+        <title>Tombol Simpan (disket)</title>
+        <rect x="14" y="9" width="22" height="20" rx="4" fill={hot('save') ? C.flame : 'transparent'} />
+        <path d="M18 12 h11 l3 3 v9 h-14 Z" fill="none" stroke="#fff" strokeWidth="1.7" strokeLinejoin="round" />
+        <rect x="21" y="18" width="8" height="6" fill="#fff" />
+      </g>
+      <text x="230" y="23" textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#fff">Surat Izin - Word</text>
+      <g stroke="#fff" strokeWidth="1.8">
+        <line x1="398" y1="19" x2="408" y2="19" />
+        <rect x="416" y="13" width="11" height="11" fill="none" />
+        <path d="M436 13 l10 10 M446 13 l-10 10" />
+      </g>
+      {/* Tab ribbon */}
+      <g fontSize="10.5" fontWeight="700">
+        <rect x="10" y="38" width="36" height="20" rx="4" fill="#1f5cb0" />
+        <text x="28" y="52" textAnchor="middle" fill="#fff">File</text>
+        <text x="66" y="52" textAnchor="middle" fill={C.ink}>Home</text>
+        <rect x="50" y="56" width="32" height="2.5" fill={C.flame} />
+        <text x="110" y="52" textAnchor="middle" fill={C.soft}>Insert</text>
+        <text x="156" y="52" textAnchor="middle" fill={C.soft}>Layout</text>
+      </g>
+      {/* Badan ribbon */}
+      <rect x="4" y="60" width="452" height="64" fill="#f6f8f9" stroke={C.line} strokeWidth="1" />
+      {/* Grup Font */}
+      <rect x="12" y="66" width="92" height="18" rx="4" fill={C.paper} stroke={C.line} />
+      <text x="18" y="79" fontSize="10" fill={C.ink}>Calibri</text>
+      <g {...partProps('fontsize', onPart)}>
+        <title>Ukuran huruf</title>
+        <rect x="108" y="66" width="30" height="18" rx="4"
+          fill={hot('fontsize') ? C.flame : C.paper} stroke={hot('fontsize') ? C.flame : C.line} />
+        <text x="123" y="79" textAnchor="middle" fontSize="10" fontWeight="700"
+          fill={hot('fontsize') ? '#fff' : C.ink}>12</text>
+      </g>
+      {btn('bold', 12, 90, 26, 'Bold - menebalkan',
+        <text x="25" y="107" textAnchor="middle" fontSize="13" fontWeight="900" stroke="none">B</text>)}
+      {btn('italic', 42, 90, 26, 'Italic - memiringkan',
+        <text x="55" y="107" textAnchor="middle" fontSize="13" fontStyle="italic" fontWeight="700" stroke="none">I</text>)}
+      {btn('underline', 72, 90, 26, 'Underline - menggarisbawahi',
+        <g stroke="none"><text x="85" y="105" textAnchor="middle" fontSize="12.5" fontWeight="700">U</text>
+        <rect x="79" y="108" width="12" height="1.8" /></g>)}
+      <text x="75" y="121" textAnchor="middle" fontSize="8" fill={C.faint}>Font</text>
+      <line x1="148" y1="64" x2="148" y2="118" stroke={C.line} />
+      {/* Grup Paragraph */}
+      {btn('bullets', 158, 66, 28, 'Daftar titik (bullets)',
+        <g strokeWidth="1.6" strokeLinecap="round">
+          <circle cx="165" cy="73" r="1.6" stroke="none" /><line x1="170" y1="73" x2="180" y2="73" />
+          <circle cx="165" cy="78" r="1.6" stroke="none" /><line x1="170" y1="78" x2="180" y2="78" />
+          <circle cx="165" cy="83" r="1.6" stroke="none" /><line x1="170" y1="83" x2="180" y2="83" />
+        </g>)}
+      {btn('numbering', 190, 66, 28, 'Daftar bernomor (numbering)',
+        <g strokeWidth="1.6" strokeLinecap="round" fontSize="6.5" fontWeight="700">
+          <text x="195" y="75" stroke="none">1</text><line x1="202" y1="73" x2="212" y2="73" />
+          <text x="195" y="80" stroke="none">2</text><line x1="202" y1="78" x2="212" y2="78" />
+          <text x="195" y="85" stroke="none">3</text><line x1="202" y1="83" x2="212" y2="83" />
+        </g>)}
+      {btn('alignleft', 158, 90, 26, 'Rata kiri',
+        <g strokeLinecap="round">{alignLines([163], [16, 11, 16, 9], 90)}</g>)}
+      {btn('aligncenter', 188, 90, 26, 'Rata tengah',
+        <g strokeLinecap="round">{alignLines([193, 195.5, 193, 196.5], [16, 11, 16, 9], 90)}</g>)}
+      {btn('alignright', 218, 90, 26, 'Rata kanan',
+        <g strokeLinecap="round">{alignLines([223, 228, 223, 230], [16, 11, 16, 9], 90)}</g>)}
+      {btn('justify', 248, 90, 26, 'Rata kiri-kanan (justify)',
+        <g strokeLinecap="round">{alignLines([253], [16, 16, 16, 16], 90)}</g>)}
+      <text x="208" y="121" textAnchor="middle" fontSize="8" fill={C.faint}>Paragraph</text>
+      <line x1="284" y1="64" x2="284" y2="118" stroke={C.line} />
+      <text x="296" y="78" fontSize="8.5" fill={C.faint}>Styles ...</text>
+      {/* Halaman */}
+      <rect x="4" y="124" width="452" height="180" fill="#e6ebee" />
+      <g {...partProps('page', onPart)}>
+        <title>Halaman tempat mengetik</title>
+        <rect x="92" y="136" width="276" height="158" fill={hot('page') ? C.flameSoft : '#fff'}
+          stroke={C.line} strokeWidth="1.2" />
+        <text x="230" y="160" textAnchor="middle" fontSize="11" fontWeight="800" fill={C.ink}>SURAT IZIN</text>
+        <g stroke={C.line} strokeWidth="5" strokeLinecap="round">
+          <line x1="112" y1="180" x2="330" y2="180" />
+          <line x1="112" y1="196" x2="348" y2="196" />
+          <line x1="112" y1="212" x2="300" y2="212" />
+        </g>
+        <rect x="303" y="205" width="2.4" height="14" fill={C.ink} />
+      </g>
+      {/* Status bar */}
+      <rect x="4" y="304" width="452" height="22" fill="#f6f8f9" stroke={C.line} strokeWidth="1" />
+      <text x="14" y="319" fontSize="9" fill={C.soft}>Page 1 of 1    28 words</text>
+      <text x="446" y="319" textAnchor="end" fontSize="9" fill={C.soft}>100%</text>
+    </svg>
+  )
+}
+
+/* ================= DIALOG SIMPAN (Save As) ================= */
+
+export function SaveDialog({ highlight = [], onPart = null }) {
+  const hot = (id) => highlight.includes(id)
+  return (
+    <svg viewBox="0 0 400 240" className="diagram diagram-sm" role="img" aria-label="Gambar jendela Save As">
+      <rect x="6" y="6" width="388" height="228" rx="10" fill={C.paper} stroke={C.ink} strokeWidth="2.5" />
+      <rect x="6" y="6" width="388" height="32" rx="10" fill={C.panel} />
+      <text x="20" y="27" fontSize="12.5" fontWeight="800" fill={C.ink}>Save As</text>
+      <g {...partProps('location', onPart)}>
+        <title>Lokasi penyimpanan</title>
+        <rect x="20" y="48" width="360" height="24" rx="6"
+          fill={hot('location') ? C.flameSoft : '#fff'} stroke={hot('location') ? C.flame : C.line} strokeWidth="1.5" />
+        <path d="M30 54 h9 l3 3.5 h10 v9 h-22 Z" fill="#f6c453" stroke={C.ink} strokeWidth="1.2" />
+        <text x="58" y="64" fontSize="10.5" fill={C.ink}>This PC  &gt;  Documents  &gt;  LATIHAN</text>
+      </g>
+      <text x="20" y="98" fontSize="10.5" fontWeight="700" fill={C.soft}>File name:</text>
+      <g {...partProps('filename', onPart)}>
+        <title>Kotak nama file</title>
+        <rect x="92" y="84" width="288" height="24" rx="6"
+          fill={hot('filename') ? C.flameSoft : '#fff'} stroke={hot('filename') ? C.flame : C.line} strokeWidth="1.5" />
+        <text x="100" y="100" fontSize="11" fontWeight="700" fill={C.ink}>Surat Izin Tidak Masuk</text>
+        <rect x="232" y="89" width="2" height="14" fill={C.ink} />
+      </g>
+      <text x="20" y="132" fontSize="10.5" fontWeight="700" fill={C.soft}>Save as type:</text>
+      <rect x="108" y="118" width="272" height="24" rx="6" fill="#fff" stroke={C.line} strokeWidth="1.5" />
+      <text x="116" y="134" fontSize="10.5" fill={C.ink}>Word Document (*.docx)</text>
+      <g {...partProps('savebtn', onPart)}>
+        <title>Tombol Save</title>
+        <rect x="216" y="186" width="78" height="30" rx="8" fill={C.flame}
+          stroke={hot('savebtn') ? C.ink : C.flame} strokeWidth={hot('savebtn') ? 2.5 : 1} />
+        <text x="255" y="206" textAnchor="middle" fontSize="12.5" fontWeight="800" fill="#fff">Save</text>
+      </g>
+      <rect x="302" y="186" width="78" height="30" rx="8" fill="#fff" stroke={C.line} strokeWidth="1.5" />
+      <text x="341" y="206" textAnchor="middle" fontSize="12" fontWeight="700" fill={C.soft}>Cancel</text>
+    </svg>
+  )
+}
+
+/* ================= DIALOG CETAK (Print) ================= */
+
+export function PrintDialog({ highlight = [], onPart = null }) {
+  const hot = (id) => highlight.includes(id)
+  return (
+    <svg viewBox="0 0 440 270" className="diagram" role="img" aria-label="Gambar layar Print">
+      <rect x="4" y="4" width="432" height="262" rx="10" fill={C.paper} stroke={C.ink} strokeWidth="2.5" />
+      <text x="22" y="34" fontSize="16" fontWeight="800" fill={C.ink}>Print</text>
+      <g {...partProps('printbtn', onPart)}>
+        <title>Tombol Print</title>
+        <rect x="22" y="48" width="120" height="36" rx="9" fill={C.flame}
+          stroke={hot('printbtn') ? C.ink : C.flame} strokeWidth={hot('printbtn') ? 2.5 : 1} />
+        <g stroke="#fff" strokeWidth="1.8" fill="none">
+          <rect x="34" y="60" width="16" height="9" rx="1.5" />
+          <path d="M37 60 v-4 h10 v4 M37 66 h10" />
+        </g>
+        <text x="96" y="71" textAnchor="middle" fontSize="13" fontWeight="800" fill="#fff">Print</text>
+      </g>
+      <text x="158" y="64" fontSize="10.5" fontWeight="700" fill={C.soft}>Copies:</text>
+      <g {...partProps('copies', onPart)}>
+        <title>Jumlah salinan</title>
+        <rect x="206" y="50" width="44" height="24" rx="6"
+          fill={hot('copies') ? C.flameSoft : '#fff'} stroke={hot('copies') ? C.flame : C.line} strokeWidth="1.5" />
+        <text x="228" y="66" textAnchor="middle" fontSize="11.5" fontWeight="800" fill={C.ink}>1</text>
+      </g>
+      <text x="22" y="112" fontSize="10" fontWeight="800" fill={C.faint}>PRINTER</text>
+      <g {...partProps('printer', onPart)}>
+        <title>Pilihan printer</title>
+        <rect x="22" y="120" width="228" height="28" rx="7"
+          fill={hot('printer') ? C.flameSoft : '#fff'} stroke={hot('printer') ? C.flame : C.line} strokeWidth="1.5" />
+        <circle cx="38" cy="134" r="4.5" fill={C.sea} />
+        <text x="50" y="138" fontSize="10.5" fontWeight="700" fill={C.ink}>EPSON L3110 - Ready</text>
+      </g>
+      <text x="22" y="176" fontSize="10" fontWeight="800" fill={C.faint}>SETTINGS</text>
+      <g {...partProps('range', onPart)}>
+        <title>Halaman yang dicetak</title>
+        <rect x="22" y="184" width="228" height="28" rx="7"
+          fill={hot('range') ? C.flameSoft : '#fff'} stroke={hot('range') ? C.flame : C.line} strokeWidth="1.5" />
+        <text x="34" y="202" fontSize="10.5" fontWeight="700" fill={C.ink}>Print All Pages</text>
+        <path d="M236 192 l5 6 l5 -6" stroke={C.soft} strokeWidth="1.8" fill="none" />
+      </g>
+      {/* Pratinjau */}
+      <rect x="270" y="48" width="148" height="200" fill="#e6ebee" rx="6" />
+      <rect x="292" y="62" width="104" height="146" fill="#fff" stroke={C.line} strokeWidth="1.2" />
+      <text x="344" y="82" textAnchor="middle" fontSize="7.5" fontWeight="800" fill={C.ink}>SURAT IZIN</text>
+      <g stroke={C.line} strokeWidth="3.5" strokeLinecap="round">
+        <line x1="302" y1="96" x2="384" y2="96" />
+        <line x1="302" y1="106" x2="378" y2="106" />
+        <line x1="302" y1="116" x2="386" y2="116" />
+        <line x1="302" y1="126" x2="360" y2="126" />
+      </g>
+      <text x="344" y="230" textAnchor="middle" fontSize="9" fill={C.soft}>1 of 1</text>
+    </svg>
+  )
 }

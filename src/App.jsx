@@ -7,7 +7,7 @@ import TypingDrill from './TypingDrill'
 import FinalTest from './FinalTest'
 import Placement from './Placement'
 import AdminPanel from './AdminPanel'
-import { MODUL0 } from './content/modul0'
+import { getEntry, findBab } from './content'
 import * as api from './api'
 
 const TOKEN_KEY = 'lentera_token'
@@ -130,14 +130,16 @@ export default function App() {
   }
 
   if (view.name === 'module') {
+    const entry = getEntry(view.moduleId ?? 'm0')
     return (
       <div className="shell">
         <ModulePage
+          entry={entry}
           progressMap={progressMap}
           track={track}
           onOpenBab={(id) => go('lesson', { babId: id })}
           onOpenDrill={() => go('drill')}
-          onOpenFinal={() => go('final')}
+          onOpenFinal={() => go('final', { moduleId: entry.module.id })}
           onBack={() => go('dashboard')}
         />
       </div>
@@ -145,13 +147,14 @@ export default function App() {
   }
 
   if (view.name === 'lesson') {
-    const i = MODUL0.bab.findIndex((b) => b.id === view.babId)
-    const bab = MODUL0.bab[i]
-    if (!bab) {
+    const hit = findBab(view.babId)
+    if (!hit) {
       setTimeout(() => go('module'), 0)
       return null
     }
-    const nextBab = MODUL0.bab[i + 1] || null
+    const { entry, bab } = hit
+    const i = entry.module.bab.indexOf(bab)
+    const nextBab = entry.module.bab[i + 1] || null
     return (
       <div className="shell">
         <LessonView
@@ -160,7 +163,7 @@ export default function App() {
           nextBab={nextBab}
           alreadyDone={progressMap[bab.id]?.status === 'selesai'}
           onComplete={(id, payload) => saveProgress(id, 'selesai', null, payload)}
-          onBack={() => go('module')}
+          onBack={() => go('module', { moduleId: entry.module.id })}
           onOpenBab={(id) => go('lesson', { babId: id })}
         />
       </div>
@@ -173,25 +176,27 @@ export default function App() {
         <TypingDrill
           bestLevel={Number(progressMap['m0.drill']?.score ?? 0)}
           onPass={(level, extra) => saveProgress('m0.drill', 'selesai', level, extra)}
-          onBack={() => go('module')}
+          onBack={() => go('module', { moduleId: 'm0' })}
         />
       </div>
     )
   }
 
   if (view.name === 'final') {
+    const entry = getEntry(view.moduleId ?? 'm0')
+    const finalId = entry.module.final.id
     return (
       <div className="shell">
         <FinalTest
-          test={MODUL0.final}
-          bestScore={progressMap['m0.final']?.score ?? null}
+          test={entry.module.final}
+          bestScore={progressMap[finalId]?.score ?? null}
           onFinish={(score, passed, seconds) =>
-            saveProgress('m0.final', passed ? 'selesai' : 'sedang', score, {
+            saveProgress(finalId, passed ? 'selesai' : 'sedang', score, {
               seconds,
               meta: { lastScore: score },
             })
           }
-          onBack={() => go('module')}
+          onBack={() => go('module', { moduleId: entry.module.id })}
         />
       </div>
     )
@@ -204,7 +209,7 @@ export default function App() {
       activity={state.activity}
       track={track}
       onLogout={handleLogout}
-      onOpenModule={() => go('module')}
+      onOpenModule={(id) => go('module', { moduleId: id ?? 'm0' })}
       onOpenAdmin={isAdmin ? () => go('admin') : null}
     />
   )
