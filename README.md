@@ -5,7 +5,7 @@ administrative assistant / personal assistant / purchasing staff.
 
 ## Status
 
-v0.1.0 — Paket 0 (Fondasi): login, akun, struktur database, deploy.
+v0.1.1 — Paket 0 (Fondasi): login, akun, struktur database, deploy, kredit pembuat.
 
 ## Arsitektur
 

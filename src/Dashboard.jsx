@@ -60,8 +60,13 @@ export default function Dashboard({ user, onLogout }) {
     <div className="shell">
       <header className="topbar">
         <div className="topbar-brand">
-          <Lamp size={28} />
-          <span>Lentera</span>
+          <Lamp size={30} />
+          <div className="brand-stack">
+            <span className="brand-word">Lentera</span>
+            <span className="credit">
+              created by <strong>Mohammad Dimas Priambodo</strong>
+            </span>
+          </div>
         </div>
         <button className="btn-ghost" onClick={onLogout}>
           Keluar

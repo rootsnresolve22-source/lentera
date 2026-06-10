@@ -34,6 +34,9 @@ export default function Login({ onLogin }) {
           <Lamp size={64} />
           <h1 className="brand-name">Lentera</h1>
           <p className="brand-tag">Belajar komputer dari nol sampai siap kerja.</p>
+          <p className="credit credit-login">
+            created by <strong>Mohammad Dimas Priambodo</strong>
+          </p>
         </div>
 
         <form className="card" onSubmit={submit} noValidate>

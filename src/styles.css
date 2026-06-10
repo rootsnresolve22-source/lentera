@@ -199,6 +199,37 @@ input:focus {
   margin-top: 18px;
 }
 
+
+.brand-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.brand-word {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+}
+
+.credit {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--ink-faint);
+  letter-spacing: 0.3px;
+}
+
+.credit strong {
+  font-weight: 700;
+  color: var(--flame-deep);
+}
+
+.credit-login {
+  font-size: 12px;
+  margin: 10px 0 0;
+  text-align: center;
+}
+
 /* ---------- App shell ---------- */
 .shell {
   max-width: 480px;
