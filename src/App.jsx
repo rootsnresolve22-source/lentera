@@ -5,60 +5,79 @@ import ModulePage from './ModulePage'
 import LessonView from './LessonView'
 import TypingDrill from './TypingDrill'
 import FinalTest from './FinalTest'
+import Placement from './Placement'
+import AdminPanel from './AdminPanel'
 import { MODUL0 } from './content/modul0'
 import * as api from './api'
 
 const TOKEN_KEY = 'lentera_token'
+const getToken = () => localStorage.getItem(TOKEN_KEY)
 
 export default function App() {
-  const [state, setState] = useState({ phase: 'boot', user: null, progress: [] })
+  const [state, setState] = useState({ phase: 'boot', user: null, progress: [], activity: null })
   const [view, setView] = useState({ name: 'dashboard' })
 
+  function loadMe(token) {
+    return api.me(token).then(({ user, progress, activity }) => {
+      setState({ phase: 'app', user, progress, activity })
+    })
+  }
+
   useEffect(() => {
-    const token = localStorage.getItem(TOKEN_KEY)
+    const token = getToken()
     if (!token) {
-      setState({ phase: 'login', user: null, progress: [] })
+      setState({ phase: 'login', user: null, progress: [], activity: null })
       return
     }
-    api
-      .me(token)
-      .then(({ user, progress }) => setState({ phase: 'app', user, progress }))
-      .catch(() => {
-        localStorage.removeItem(TOKEN_KEY)
-        setState({ phase: 'login', user: null, progress: [] })
-      })
+    loadMe(token).catch(() => {
+      localStorage.removeItem(TOKEN_KEY)
+      setState({ phase: 'login', user: null, progress: [], activity: null })
+    })
   }, [])
+
+  // Denyut aktivitas: ping saat aplikasi terbuka + tiap 4 menit selama tab terlihat.
+  useEffect(() => {
+    if (state.phase !== 'app') return
+    const send = () => {
+      if (document.visibilityState === 'visible') {
+        const t = getToken()
+        if (t) api.ping(t).catch(() => {})
+      }
+    }
+    send()
+    const id = setInterval(send, 4 * 60 * 1000)
+    return () => clearInterval(id)
+  }, [state.phase, state.user?.id])
 
   function handleLogin({ token, user }) {
     localStorage.setItem(TOKEN_KEY, token)
-    setState({ phase: 'app', user, progress: [] })
+    setState({ phase: 'app', user, progress: [], activity: null })
     setView({ name: 'dashboard' })
-    // ambil progres tersimpan milik akun ini
-    api.me(token).then(({ progress }) => {
-      setState((s) => ({ ...s, progress }))
-    }).catch(() => {})
+    loadMe(token).catch(() => {})
   }
 
   async function handleLogout() {
-    const token = localStorage.getItem(TOKEN_KEY)
+    const token = getToken()
     localStorage.removeItem(TOKEN_KEY)
-    setState({ phase: 'login', user: null, progress: [] })
+    setState({ phase: 'login', user: null, progress: [], activity: null })
     setView({ name: 'dashboard' })
     if (token) {
       try { await api.logout(token) } catch (e) { /* aman diabaikan */ }
     }
   }
 
-  // Simpan progres ke server lalu cerminkan ke state lokal.
-  // Mengembalikan true/false supaya layar bisa memberi tahu kalau gagal.
-  async function saveProgress(item_id, status, score = null) {
-    const token = localStorage.getItem(TOKEN_KEY)
+  // Simpan progres + metrik ke server lalu cerminkan ke state lokal.
+  async function saveProgress(item_id, status, score = null, extra = {}) {
+    const token = getToken()
     if (!token) return false
     try {
-      const res = await api.saveProgress(token, item_id, status, score)
+      const res = await api.saveProgress(token, item_id, status, score, extra)
       setState((s) => {
         const i = s.progress.findIndex((p) => p.item_id === res.item_id)
-        const item = { item_id: res.item_id, status: res.status, score: res.score }
+        const item = {
+          item_id: res.item_id, status: res.status, score: res.score,
+          attempts: res.attempts, seconds: res.seconds, meta: res.meta,
+        }
         const progress = i === -1 ? [...s.progress, item] : s.progress.map((p, j) => (j === i ? item : p))
         return { ...s, progress }
       })
@@ -86,12 +105,31 @@ export default function App() {
   if (state.phase === 'login') return <Login onLogin={handleLogin} />
 
   const progressMap = Object.fromEntries(state.progress.map((p) => [p.item_id, p]))
+  const isAdmin = state.user.role === 'admin'
+  const track = isAdmin ? 'cepat' : progressMap['placement']?.meta?.track ?? 'pemula'
+
+  // Gerbang penempatan: peserta baru wajib lewat tes penempatan sekali.
+  if (!isAdmin && !progressMap['placement']) {
+    return (
+      <Placement
+        onDone={(payload) => {
+          if (!payload) { go('dashboard'); return true }
+          return saveProgress('placement', 'selesai', payload.score, { meta: payload.meta })
+        }}
+      />
+    )
+  }
+
+  if (view.name === 'admin' && isAdmin) {
+    return <AdminPanel token={getToken()} onBack={() => go('dashboard')} />
+  }
 
   if (view.name === 'module') {
     return (
       <div className="shell">
         <ModulePage
           progressMap={progressMap}
+          track={track}
           onOpenBab={(id) => go('lesson', { babId: id })}
           onOpenDrill={() => go('drill')}
           onOpenFinal={() => go('final')}
@@ -116,7 +154,7 @@ export default function App() {
           bab={bab}
           nextBab={nextBab}
           alreadyDone={progressMap[bab.id]?.status === 'selesai'}
-          onComplete={(id) => saveProgress(id, 'selesai')}
+          onComplete={(id, payload) => saveProgress(id, 'selesai', null, payload)}
           onBack={() => go('module')}
           onOpenBab={(id) => go('lesson', { babId: id })}
         />
@@ -129,7 +167,7 @@ export default function App() {
       <div className="shell">
         <TypingDrill
           bestLevel={Number(progressMap['m0.drill']?.score ?? 0)}
-          onPass={(level) => saveProgress('m0.drill', 'selesai', level)}
+          onPass={(level, extra) => saveProgress('m0.drill', 'selesai', level, extra)}
           onBack={() => go('module')}
         />
       </div>
@@ -142,8 +180,11 @@ export default function App() {
         <FinalTest
           test={MODUL0.final}
           bestScore={progressMap['m0.final']?.score ?? null}
-          onFinish={(score, passed) =>
-            saveProgress('m0.final', passed ? 'selesai' : 'sedang', score)
+          onFinish={(score, passed, seconds) =>
+            saveProgress('m0.final', passed ? 'selesai' : 'sedang', score, {
+              seconds,
+              meta: { lastScore: score },
+            })
           }
           onBack={() => go('module')}
         />
@@ -155,8 +196,11 @@ export default function App() {
     <Dashboard
       user={state.user}
       progressMap={progressMap}
+      activity={state.activity}
+      track={track}
       onLogout={handleLogout}
       onOpenModule={() => go('module')}
+      onOpenAdmin={isAdmin ? () => go('admin') : null}
     />
   )
 }

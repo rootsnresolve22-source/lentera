@@ -786,3 +786,189 @@ kbd {
   border-radius: 99px;
   transition: width 0.4s;
 }
+
+/* ===================== v0.3.0 — Penempatan, Admin, Rapot ===================== */
+
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+.badge-track {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 10px;
+  background: var(--flame-soft);
+  color: var(--flame-deep);
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.pc-meta {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.75);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.place-head { margin: 8px 0 4px; }
+
+/* ---- Panel admin ---- */
+.shell-wide { max-width: 980px; margin: 0 auto; padding: 18px 18px 60px; }
+
+.admin-wrap { overflow-x: auto; }
+.admin-tab {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 13.5px;
+}
+.admin-tab th {
+  text-align: left;
+  padding: 11px 12px;
+  background: #f4efe6;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.admin-tab td {
+  padding: 11px 12px;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+  white-space: nowrap;
+}
+.admin-row { cursor: pointer; }
+.admin-row:hover td { background: var(--flame-soft); }
+.admin-sub { font-size: 12px; color: var(--ink-faint); }
+
+/* ---- Rapot ---- */
+.rapor {
+  background: var(--card);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+}
+.rapor-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 2.5px solid var(--ink);
+}
+.rapor-title { text-align: right; }
+.rapor-title h1 { margin: 0; font-size: 24px; }
+.rapor-title p { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-soft); }
+
+.rapor-ident {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px 18px;
+  margin: 16px 0;
+}
+.rapor-ident span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.rapor-ident strong { font-size: 15px; }
+
+.rapor-indeks {
+  display: flex;
+  gap: 18px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin: 14px 0 6px;
+}
+.ri-big {
+  flex: 0 0 170px;
+  background: var(--ink);
+  color: #f4efe6;
+  border-radius: 14px;
+  padding: 16px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+.ri-num { font-size: 46px; font-weight: 800; line-height: 1; }
+.ri-label { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+.ri-pred { margin-top: 6px; font-weight: 800; color: var(--flame); }
+.ri-subs {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 10px;
+}
+.ri-sub {
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+}
+.ri-sub-num { display: block; font-size: 24px; font-weight: 800; color: var(--flame-deep); }
+.ri-sub-name { display: block; font-size: 13px; font-weight: 700; }
+.ri-sub-w { font-size: 11px; color: var(--ink-faint); }
+
+.rapor-tab {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin: 8px 0 4px;
+}
+.rapor-tab th {
+  text-align: left;
+  padding: 8px 9px;
+  border-bottom: 2px solid var(--ink);
+  font-size: 11.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.rapor-tab td { padding: 8px 9px; border-bottom: 1px solid var(--line); }
+
+.rapor-akt {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 8px 0;
+}
+.rapor-akt > div {
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+.rapor-akt strong { display: block; font-size: 17px; }
+.rapor-akt span { font-size: 12px; color: var(--ink-soft); }
+
+.rapor-notes li { font-size: 14px; }
+
+.rapor-foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 26px;
+}
+.rapor-sign { text-align: center; font-size: 13.5px; }
+.rapor-sign p { margin: 2px 0; }
+.rapor-sign-space { height: 58px; display: flex; align-items: flex-end; justify-content: center; color: var(--ink-faint); }
+
+/* ---- Cetak: hanya rapot yang tampil ---- */
+@media print {
+  body { background: #fff; }
+  body * { visibility: hidden; }
+  .rapor, .rapor * { visibility: visible; }
+  .rapor {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+  }
+  .no-print { display: none !important; }
+}

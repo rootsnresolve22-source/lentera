@@ -1,14 +1,15 @@
 import { MODUL0 } from './content/modul0'
 
-export default function ModulePage({ progressMap, onOpenBab, onOpenDrill, onOpenFinal, onBack }) {
+export default function ModulePage({ progressMap, track = 'pemula', onOpenBab, onOpenDrill, onOpenFinal, onBack }) {
+  const cepat = track === 'cepat'
   const babDone = (no) => progressMap['m0.b' + no]?.status === 'selesai'
   const drillScore = Number(progressMap['m0.drill']?.score ?? 0)
   const finalScore = progressMap['m0.final']?.score ?? null
   const finalPassed = finalScore !== null && Number(finalScore) >= MODUL0.final.pass
 
   const allBab = MODUL0.bab.every((b) => babDone(b.no))
-  const drillUnlocked = babDone(3)
-  const finalUnlocked = allBab && drillScore >= 1
+  const drillUnlocked = cepat || babDone(3)
+  const finalUnlocked = cepat ? drillScore >= 1 : allBab && drillScore >= 1
 
   const doneCount =
     MODUL0.bab.filter((b) => babDone(b.no)).length +
@@ -18,15 +19,21 @@ export default function ModulePage({ progressMap, onOpenBab, onOpenDrill, onOpen
   return (
     <div className="lesson">
       <button className="btn-back" onClick={onBack}>← Beranda</button>
-      <p className="lesson-eyebrow">Modul 0 · {doneCount} dari 9 langkah selesai</p>
+      <p className="lesson-eyebrow">Modul 0 · {doneCount} dari {2 + MODUL0.bab.length} langkah selesai</p>
       <h1 className="lesson-title">Dasar komputer</h1>
       <p className="lesson-desc">{MODUL0.intro}</p>
+      {cepat && (
+        <div className="blk-box blk-tip">
+          <span className="box-label">Jalur Cepat</span>
+          <p>Semua bab terbuka bebas — boleh dibaca kilat atau dilewati. Wajib: latihan mengetik minimal Level 1 dan lulus ujian akhir.</p>
+        </div>
+      )}
 
       <p className="section-label">Bab demi bab</p>
       <div className="path">
         {MODUL0.bab.map((b) => {
           const done = babDone(b.no)
-          const open = b.no === 1 || babDone(b.no - 1)
+          const open = cepat || b.no === 1 || babDone(b.no - 1)
           const state = done ? 'done' : open ? 'next' : 'locked'
           return (
             <div key={b.id} className={`step is-${state === 'next' ? 'next' : state === 'done' ? 'done' : 'locked'}`}>
@@ -74,7 +81,7 @@ export default function ModulePage({ progressMap, onOpenBab, onOpenDrill, onOpen
             </span>
           </div>
           <p className="step-desc">
-            16 soal dari semua bab, lulus 85. {finalUnlocked || finalPassed ? 'Kamu sudah memenuhi syarat — semoga berhasil!' : 'Terbuka setelah semua bab selesai dan Level 1 mengetik lulus.'}
+            {MODUL0.final.questions.length} soal dari semua bab, lulus {MODUL0.final.pass}. {finalUnlocked || finalPassed ? 'Kamu sudah memenuhi syarat — semoga berhasil!' : cepat ? 'Terbuka setelah Level 1 mengetik lulus.' : 'Terbuka setelah semua bab selesai dan Level 1 mengetik lulus.'}
           </p>
         </button>
       </div>

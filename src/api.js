@@ -30,5 +30,13 @@ export const me = (token) => request('me', { token })
 
 export const logout = (token) => request('logout', { method: 'POST', token })
 
-export const saveProgress = (token, item_id, status, score = null) =>
-  request('progress', { method: 'POST', token, body: { item_id, status, score } })
+export const saveProgress = (token, item_id, status, score = null, extra = {}) =>
+  request('progress', {
+    method: 'POST',
+    token,
+    body: { item_id, status, score, seconds: extra.seconds ?? null, meta: extra.meta ?? null },
+  })
+
+export const ping = (token) => request('ping', { method: 'POST', token })
+
+export const overview = (token) => request('overview', { token })

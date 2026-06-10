@@ -7,6 +7,8 @@ export default function Quiz({ questions, onFinish }) {
   const [idx, setIdx] = useState(0)
   const [feedback, setFeedback] = useState(null) // { ok, text }
   const [solved, setSolved] = useState(false)
+  const [wrong, setWrong] = useState(0)
+  const [startAt] = useState(() => Date.now())
 
   const q = questions[idx]
   const last = idx === questions.length - 1
@@ -17,6 +19,7 @@ export default function Quiz({ questions, onFinish }) {
       setSolved(true)
       setFeedback({ ok: true, text: q.explain || 'Benar!' })
     } else {
+      setWrong(wrong + 1)
       const msg = (q.wrong && q.wrong[i]) || 'Belum tepat. Coba lagi — perhatikan baik-baik.'
       setFeedback({ ok: false, text: msg })
     }
@@ -28,6 +31,7 @@ export default function Quiz({ questions, onFinish }) {
       setSolved(true)
       setFeedback({ ok: true, text: q.explain || 'Benar!' })
     } else {
+      setWrong(wrong + 1)
       const msg = (q.wrong && q.wrong[partId]) || 'Belum tepat. Coba klik bagian yang lain.'
       setFeedback({ ok: false, text: msg })
     }
@@ -35,7 +39,7 @@ export default function Quiz({ questions, onFinish }) {
 
   function next() {
     if (last) {
-      onFinish()
+      onFinish({ wrong, seconds: Math.round((Date.now() - startAt) / 1000) })
       return
     }
     setIdx(idx + 1)

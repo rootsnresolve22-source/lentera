@@ -99,9 +99,12 @@ export default function LessonView({ bab, nextBab, alreadyDone, onComplete, onBa
   const [phase, setPhase] = useState('materi')
   const [saveWarn, setSaveWarn] = useState(false)
 
-  async function finishQuiz() {
+  async function finishQuiz(stats) {
     if (!alreadyDone) {
-      const ok = await onComplete(bab.id)
+      const ok = await onComplete(bab.id, {
+        seconds: stats.seconds,
+        meta: { wrong: stats.wrong, qcount: bab.quiz.length },
+      })
       setSaveWarn(!ok)
     }
     setPhase('selesai')

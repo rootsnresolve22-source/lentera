@@ -27,12 +27,14 @@ export default function FinalTest({ test, bestScore, onFinish, onBack }) {
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState([])
   const [result, setResult] = useState(null)
+  const [startAt, setStartAt] = useState(null)
 
   function start() {
     setItems(prepare(test.questions))
     setIdx(0)
     setAnswers([])
     setResult(null)
+    setStartAt(Date.now())
     setScreen('soal')
     window.scrollTo(0, 0)
   }
@@ -48,7 +50,8 @@ export default function FinalTest({ test, bestScore, onFinish, onBack }) {
     const right = newAnswers.filter((a) => a.correct).length
     const score = Math.round((right / items.length) * 100)
     const passed = score >= test.pass
-    const saved = await onFinish(score, passed)
+    const seconds = Math.round((Date.now() - startAt) / 1000)
+    const saved = await onFinish(score, passed, seconds)
     setAnswers(newAnswers)
     setResult({ score, right, passed, saved })
     setScreen('hasil')

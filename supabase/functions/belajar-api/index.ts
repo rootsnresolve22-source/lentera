@@ -32,7 +32,47 @@ async function getUser(token: string | null) {
   return u
 }
 
-Deno.serve(async (req) => {
+const dayKey = (iso: string) => iso.slice(0, 10)
+
+// Sesi = rangkaian event dengan jeda antar event <= 20 menit.
+// Durasi sesi = (akhir - awal) + 4 menit kredit dasar.
+function summarizeEvents(events: { type: string; created_at: string }[], days: number) {
+  const since = Date.now() - days * 86400000
+  const ev = events
+    .filter((e) => new Date(e.created_at).getTime() >= since)
+    .sort((a, b) => a.created_at.localeCompare(b.created_at))
+  const daysSet = new Set(ev.map((e) => dayKey(e.created_at)))
+  let minutes = 0
+  let sessions = 0
+  let start = 0
+  let prev = 0
+  for (const e of ev) {
+    const t = new Date(e.created_at).getTime()
+    if (!start) { start = t; prev = t; sessions = 1; continue }
+    if (t - prev > 20 * 60000) {
+      minutes += (prev - start) / 60000 + 4
+      sessions += 1
+      start = t
+    }
+    prev = t
+  }
+  if (start) minutes += (prev - start) / 60000 + 4
+  const logins = ev.filter((e) => e.type === 'login').length
+  // streak: hari berurutan aktif sampai hari ini (atau kemarin)
+  let streak = 0
+  const today = new Date()
+  for (let i = 0; i < days; i++) {
+    const d = new Date(today.getTime() - i * 86400000)
+    const k = d.toISOString().slice(0, 10)
+    if (daysSet.has(k)) streak += 1
+    else if (i === 0) continue // hari ini belum aktif tidak memutus streak kemarin
+    else break
+  }
+  const lastSeen = ev.length ? ev[ev.length - 1].created_at : null
+  return { daysActive: daysSet.size, minutes: Math.round(minutes), sessions, logins, streak, lastSeen }
+}
+
+Deno.serve((async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
   const path = new URL(req.url).pathname.split('/').filter(Boolean).pop()
   try {
@@ -55,19 +95,34 @@ Deno.serve(async (req) => {
         .from('belajar_sessions')
         .insert({ token, user_id: user.id, expires_at: expiresAt })
       if (insErr) { console.error('session_error', insErr); return json({ error: 'Terjadi kesalahan server.' }, 500) }
+      await supabase.from('belajar_events').insert({ user_id: user.id, type: 'login' })
       return json({ token, user })
+    }
+
+    if (req.method === 'POST' && path === 'ping') {
+      const user = await getUser(req.headers.get('x-session'))
+      if (!user) return json({ error: 'Sesi berakhir.' }, 401)
+      await supabase.from('belajar_events').insert({ user_id: user.id as string, type: 'ping' })
+      return json({ ok: true })
     }
 
     if (req.method === 'GET' && path === 'me') {
       const user = await getUser(req.headers.get('x-session'))
       if (!user) return json({ error: 'Sesi berakhir. Silakan masuk lagi.' }, 401)
-      const { data: progress } = await supabase
-        .from('belajar_progress')
-        .select('item_id, status, score, updated_at')
-        .eq('user_id', user.id as string)
+      const [{ data: progress }, { data: events }] = await Promise.all([
+        supabase.from('belajar_progress')
+          .select('item_id, status, score, attempts, seconds, meta, updated_at')
+          .eq('user_id', user.id as string),
+        supabase.from('belajar_events')
+          .select('type, created_at')
+          .eq('user_id', user.id as string)
+          .gte('created_at', new Date(Date.now() - 14 * 86400000).toISOString()),
+      ])
+      const activity = summarizeEvents(events ?? [], 14)
       return json({
         user: { id: user.id, username: user.username, full_name: user.full_name, role: user.role },
         progress: progress ?? [],
+        activity,
       })
     }
 
@@ -80,6 +135,8 @@ Deno.serve(async (req) => {
       const status = String(body.status ?? 'selesai')
       const rawScore = body.score
       const score = rawScore === null || rawScore === undefined ? null : Number(rawScore)
+      const seconds = body.seconds === null || body.seconds === undefined ? null : Math.min(36000, Math.max(0, Number(body.seconds)))
+      const meta = body.meta && typeof body.meta === 'object' ? body.meta as Record<string, unknown> : null
       if (!itemId || itemId.length > 60) return json({ error: 'item_id tidak valid.' }, 400)
       if (!['belum', 'sedang', 'selesai'].includes(status)) return json({ error: 'status tidak valid.' }, 400)
       if (score !== null && (!Number.isFinite(score) || score < 0 || score > 1000)) {
@@ -87,7 +144,7 @@ Deno.serve(async (req) => {
       }
       const { data: existing } = await supabase
         .from('belajar_progress')
-        .select('score, status')
+        .select('score, status, attempts, meta, first_done_at, seconds')
         .eq('user_id', user.id as string)
         .eq('item_id', itemId)
         .maybeSingle()
@@ -96,15 +153,44 @@ Deno.serve(async (req) => {
         bestScore = score === null ? Number(existing.score) : Math.max(Number(existing.score), score)
       }
       const finalStatus = existing && existing.status === 'selesai' ? 'selesai' : status
-      const { error: upErr } = await supabase.from('belajar_progress').upsert({
+      const mergedMeta = { ...(existing?.meta as Record<string, unknown> ?? {}), ...(meta ?? {}) }
+      const row = {
         user_id: user.id as string,
         item_id: itemId,
         status: finalStatus,
         score: bestScore,
+        attempts: (existing?.attempts ?? 0) + 1,
+        seconds: seconds ?? existing?.seconds ?? null,
+        meta: mergedMeta,
+        first_done_at: existing?.first_done_at ?? (finalStatus === 'selesai' ? new Date().toISOString() : null),
         updated_at: new Date().toISOString(),
-      })
+      }
+      const { error: upErr } = await supabase.from('belajar_progress').upsert(row)
       if (upErr) { console.error('progress_error', upErr); return json({ error: 'Gagal menyimpan progres.' }, 500) }
-      return json({ ok: true, item_id: itemId, status: finalStatus, score: bestScore })
+      return json({ ok: true, item_id: itemId, status: finalStatus, score: bestScore, attempts: row.attempts, seconds: row.seconds, meta: mergedMeta })
+    }
+
+    if (req.method === 'GET' && path === 'overview') {
+      const user = await getUser(req.headers.get('x-session'))
+      if (!user) return json({ error: 'Sesi berakhir.' }, 401)
+      if (user.role !== 'admin') return json({ error: 'Khusus admin.' }, 403)
+      const since30 = new Date(Date.now() - 30 * 86400000).toISOString()
+      const [{ data: users }, { data: progress }, { data: events }] = await Promise.all([
+        supabase.from('belajar_users').select('id, username, full_name, role, active').order('full_name'),
+        supabase.from('belajar_progress').select('user_id, item_id, status, score, attempts, seconds, meta, first_done_at, updated_at'),
+        supabase.from('belajar_events').select('user_id, type, created_at').gte('created_at', since30),
+      ])
+      const evByUser: Record<string, { type: string; created_at: string }[]> = {}
+      for (const e of events ?? []) {
+        ;(evByUser[e.user_id] ??= []).push(e)
+      }
+      const out = (users ?? []).map((u) => ({
+        user: u,
+        progress: (progress ?? []).filter((p) => p.user_id === u.id),
+        activity14: summarizeEvents(evByUser[u.id] ?? [], 14),
+        activity30: summarizeEvents(evByUser[u.id] ?? [], 30),
+      }))
+      return json({ peserta: out, generated_at: new Date().toISOString() })
     }
 
     if (req.method === 'POST' && path === 'logout') {

@@ -4,21 +4,23 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **0.2.0 · Bundle 1 — Modul 0**
+- Versi: **0.3.0 · Revisi Modul 0**
 - Produksi: Vercel (auto-build dari repo ini)
-- Backend: Supabase Edge Function `belajar-api` **v2** (login, me, progress, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
+- Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
 
-## Fitur v0.2.0
-- Modul 0 lengkap: 7 bab bergambar (laptop, mouse/touchpad, keyboard, jendela, file & folder, WiFi, mengetik 10 jari)
-- Kuis di tiap bab (27 soal): pilihan ganda + klik-gambar, salah boleh diulang dengan penjelasan
-- Latihan mengetik 10 jari 3 level dengan papan ketik penunjuk (akurasi minimal 90%)
-- Ujian akhir 16 soal, lulus 85, soal & opsi diacak, pembahasan untuk soal yang salah, boleh mengulang
-- Progres tersimpan per akun di database; bab terkunci berurutan
+## Fitur v0.3.0
+- Modul 0 diperkuat: 8 bab (termasuk bab baru "Aman dan sehat berkomputer"), 30 soal kuis, ujian akhir 18 soal lulus 85
+- Tes penempatan untuk peserta baru → Jalur Cepat / Pemula Berbekal / Pemula (Jalur Cepat: bab bebas, wajib lulus ujian)
+- Pencatatan aktivitas: login & denyut tiap 4 menit → kehadiran, durasi sesi, streak
+- Metrik per langkah: ketepatan kuis, durasi, jumlah percobaan, statistik mengetik per level
+- Dashboard peserta motivasional: jalur, kehadiran 14 hari, streak, pesan kontekstual
+- Panel Admin (khusus admin): tabel semua peserta + Indeks Lentera (Penguasaan 50% · Ketelitian 20% · Kecepatan 15% · Kerajinan 15%)
+- Rapot per peserta siap CETAK: identitas & jalur, rincian per langkah, kehadiran, catatan otomatis (termasuk pertumbuhan dari skor penempatan), area tanda tangan
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.2.0 · Bundle 1 — Modul 0**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.3.0 · Revisi Modul 0**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)

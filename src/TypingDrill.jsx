@@ -74,7 +74,10 @@ export default function TypingDrill({ bestLevel = 0, onPass, onBack }) {
     let saved = true
     if (passed) {
       setSessionBest((s) => Math.max(s, level.no))
-      saved = await onPass(level.no)
+      saved = await onPass(level.no, {
+        seconds,
+        meta: { ['l' + level.no]: { acc, kpm, seconds } },
+      })
     }
     setResult({ acc, seconds, kpm, passed, saved })
     setScreen('result')

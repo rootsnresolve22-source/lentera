@@ -59,9 +59,20 @@ export const MODUL0 = {
           t: 'warn',
           text: 'Menekan tombol power lama-lama sampai laptop mati itu namanya "paksa mati". Hanya boleh dilakukan kalau laptop benar-benar macet (hang), karena bisa merusak file yang sedang terbuka.',
         },
+        { t: 'h', text: 'Merawat laptop dan baterainya' },
+        {
+          t: 'list',
+          items: [
+            'Jauhkan minuman dari laptop — tumpahan air adalah pembunuh laptop nomor satu.',
+            'Jangan letakkan di kasur atau bantal saat menyala; lubang anginnya tertutup dan laptop kepanasan.',
+            'Angka baterai ada di pojok kanan bawah dekat jam. Di bawah 20%? Pasang charger. Sudah 100%? Boleh dicabut.',
+            'Membawa laptop: tutup dulu layarnya, pegang badannya dengan dua tangan — jangan diangkat dari layar.',
+            'Laptop bertingkah aneh atau lemot? Coba Restart dulu (Start, Power, Restart) — obat paling ampuh nomor satu.',
+          ],
+        },
         {
           t: 'try',
-          text: 'Nyalakan laptop, tunggu sampai masuk ke layar utama, lalu matikan dengan benar lewat Start. Ulangi dua kali sampai hafal tanpa melihat panduan.',
+          text: 'Nyalakan laptop, tunggu sampai masuk ke layar utama, lalu matikan dengan benar lewat Start. Ulangi dua kali sampai hafal tanpa melihat panduan. Terakhir, temukan angka baterai di pojok kanan bawah.',
         },
         {
           t: 'glossary',
@@ -256,9 +267,18 @@ export const MODUL0 = {
           t: 'p',
           text: 'Tab membuat lompatan besar, bukan satu spasi. Kalau nanti di Word tulisanmu tiba-tiba "loncat jauh", hampir pasti yang tertekan adalah Tab — letaknya memang dekat dengan huruf Q dan A.',
         },
+        { t: 'h', text: 'Angka, tanda baca, dan panah' },
+        {
+          t: 'p',
+          text: 'Deretan angka ada di baris paling atas huruf. Tanda baca yang paling sering dipakai: titik (.) dan koma (,) ada di kanan huruf M. Tanda tanya (?) didapat dengan Shift + tombol garis miring (/). Tanda seru (!) dengan Shift + 1.',
+        },
+        {
+          t: 'p',
+          text: 'Empat tombol panah di pojok kanan bawah dipakai untuk memindahkan posisi ketik (kursor teks) tanpa menghapus apa pun — naik, turun, kiri, kanan. Sangat berguna saat mau membetulkan huruf di tengah kalimat.',
+        },
         {
           t: 'try',
-          text: 'Lihat keyboard laptopmu sendiri. Tanpa menekan, tunjuk dengan jari: di mana Enter, Spasi, Backspace, Shift, Caps Lock, dan Tab. Ulangi sampai bisa menunjuk semuanya dalam 10 detik.',
+          text: 'Lihat keyboard laptopmu sendiri. Tanpa menekan, tunjuk dengan jari: di mana Enter, Spasi, Backspace, Shift, Caps Lock, Tab, titik, dan empat tombol panah. Ulangi sampai bisa menunjuk semuanya dalam 15 detik.',
         },
         {
           t: 'glossary',
@@ -381,9 +401,22 @@ export const MODUL0 = {
           t: 'p',
           text: 'Inilah cara belajarmu nanti: buka Lentera, tekan Win + panah kiri. Buka Word, tekan Win + panah kanan. Sekarang kamu bisa MEMBACA petunjuk di kiri sambil tanganmu LANGSUNG PRAKTIK di kanan. Tidak perlu bolak-balik.',
         },
+        { t: 'h', text: 'Tulisan kekecilan? Perbesar!' },
+        {
+          t: 'keys',
+          items: [
+            { combo: ['Ctrl', '+'], label: 'Memperbesar tampilan (zoom in)' },
+            { combo: ['Ctrl', '-'], label: 'Memperkecil tampilan (zoom out)' },
+            { combo: ['Ctrl', '0'], label: 'Kembali ke ukuran normal' },
+          ],
+        },
+        {
+          t: 'p',
+          text: 'Jurus ini berlaku di browser, Word, Excel, dan hampir semua aplikasi. Mata orang tua di kampung akan sangat berterima kasih.',
+        },
         {
           t: 'try',
-          text: 'Buka Notepad lewat Start. Coba minimize, munculkan lagi dari taskbar, maximize, lalu tekan Win + panah kiri dan Win + panah kanan. Terakhir, tutup dengan tombol X.',
+          text: 'Buka Notepad lewat Start. Coba minimize, munculkan lagi dari taskbar, maximize, lalu tekan Win + panah kiri dan Win + panah kanan. Coba juga Ctrl dan tombol plus untuk memperbesar. Terakhir, tutup dengan tombol X.',
         },
         {
           t: 'glossary',
@@ -490,6 +523,20 @@ export const MODUL0 = {
         {
           t: 'tip',
           text: 'Ctrl + C lalu Ctrl + V = MENYALIN (jadi dua). Ctrl + X lalu Ctrl + V = MEMINDAHKAN (tetap satu, hanya pindah rumah). Semua jurus ini juga bisa lewat klik kanan: Copy, Cut, Paste.',
+        },
+        { t: 'h', text: 'Memilih banyak file sekaligus' },
+        {
+          t: 'list',
+          items: [
+            'Tahan Ctrl sambil klik satu per satu = memilih beberapa file pilihan (loncat-loncat).',
+            'Klik file pertama, tahan Shift, klik file terakhir = memilih semua file di antaranya.',
+            'Ctrl + A = memilih SEMUA isi folder sekaligus.',
+            'Setelah terpilih banyak, Ctrl + C dan Ctrl + V bekerja untuk semuanya sekaligus.',
+          ],
+        },
+        {
+          t: 'p',
+          text: 'Mencari file yang hilang? Di pojok kanan atas File Explorer ada kotak pencarian — ketik sebagian namanya, misalnya "surat", dan semua file yang mengandung kata itu akan muncul.',
         },
         { t: 'h', text: 'Menghapus dan Recycle Bin' },
         {
@@ -722,6 +769,98 @@ export const MODUL0 = {
         },
       ],
     },
+    /* ============ BAB 8 ============ */
+    {
+      id: 'm0.b8',
+      no: 8,
+      title: 'Aman dan sehat berkomputer',
+      desc: 'Menjaga akun, mengenali jebakan, dan menjaga badan saat bekerja.',
+      blocks: [
+        {
+          t: 'p',
+          text: 'Bisa memakai komputer itu satu hal; memakainya dengan AMAN itu hal lain — dan justru ini yang membedakan pekerja yang dipercaya kantor dengan yang tidak.',
+        },
+        { t: 'h', text: 'Menjaga akun dan password' },
+        {
+          t: 'list',
+          items: [
+            'PIN dan password itu seperti kunci rumah: tidak dipinjamkan ke siapa pun, bahkan teman dekat.',
+            'Password yang baik: panjang dan campuran — huruf besar, kecil, dan angka. Hindari tanggal lahir atau "123456".',
+            'Selesai memakai komputer bersama (warnet, kantor, laptop bergantian), selalu klik Keluar / Log out dari akunmu.',
+            'Jangan menulis password di kertas yang ditempel di laptop.',
+          ],
+        },
+        { t: 'h', text: 'Mengenali jebakan di internet' },
+        {
+          t: 'list',
+          items: [
+            'Pesan "Selamat! Anda menang hadiah, klik di sini" hampir pasti penipuan. Jangan diklik.',
+            'Jangan masukkan password di halaman yang datang dari tautan mencurigakan di WA atau SMS.',
+            'Tidak ada bank atau kantor yang meminta password lewat telepon atau chat. Yang meminta = penipu.',
+            'File dari orang tak dikenal (apalagi berakhiran .exe) jangan dibuka.',
+          ],
+        },
+        { t: 'h', text: 'Menjaga badan' },
+        {
+          t: 'list',
+          items: [
+            'Duduk tegak, layar sejajar mata, jarak kira-kira satu lengan.',
+            'Aturan 20-20-20: setiap 20 menit, alihkan pandangan ke benda berjarak jauh selama 20 detik. Mata jadi tidak cepat lelah.',
+            'Bangun dan bergerak sebentar setiap satu jam.',
+            'Atur kecerahan layar senyaman mata — terlalu terang di ruangan gelap membuat mata perih.',
+          ],
+        },
+        {
+          t: 'warn',
+          text: 'Satu kali memberikan password ke orang lain bisa membuat akunmu — dan nanti data kantormu — disalahgunakan. Ini pelanggaran serius di dunia kerja.',
+        },
+        {
+          t: 'try',
+          text: 'Pikirkan satu password baru yang kuat untuk dirimu (jangan diketik di mana-mana, cukup di kepala): minimal 8 karakter, ada huruf besar dan angka, bukan tanggal lahir.',
+        },
+        {
+          t: 'glossary',
+          items: [
+            { term: 'Log out', def: 'Keluar dari akun supaya orang lain tidak bisa memakainya.' },
+            { term: 'Penipuan (phishing)', def: 'Jebakan tautan atau pesan palsu untuk mencuri password.' },
+            { term: '20-20-20', def: 'Aturan istirahat mata: tiap 20 menit, lihat jauh 20 detik.' },
+          ],
+        },
+      ],
+      quiz: [
+        {
+          type: 'mc',
+          q: 'Teman dekatmu meminjam PIN akun Lentera-mu. Sikap yang benar…',
+          options: [
+            'Berikan saja, kan teman dekat',
+            'Tolak dengan baik — PIN tidak dibagikan ke siapa pun',
+            'Berikan tapi minta dia merahasiakannya',
+            'Tukar PIN dengan PIN miliknya',
+          ],
+          answer: 1,
+          explain: 'PIN seperti kunci rumah. Di dunia kerja, menjaga akun adalah tanda orang yang bisa dipercaya.',
+        },
+        {
+          type: 'mc',
+          q: 'Muncul pesan "Selamat! Anda menang undian, klik tautan ini". Yang kamu lakukan…',
+          options: ['Klik, siapa tahu beneran', 'Teruskan ke grup keluarga', 'Abaikan dan jangan diklik', 'Balas dengan data diri'],
+          answer: 2,
+          explain: 'Hampir pasti jebakan. Tidak diklik = aman.',
+        },
+        {
+          type: 'mc',
+          q: 'Aturan 20-20-20 artinya…',
+          options: [
+            'Mengetik 20 kata per menit',
+            'Tiap 20 menit, lihat benda jauh selama 20 detik',
+            'Istirahat 20 jam setelah 20 menit kerja',
+            'Layar dimiringkan 20 derajat',
+          ],
+          answer: 1,
+          explain: 'Resep sederhana menjaga mata tetap segar sepanjang hari kerja.',
+        },
+      ],
+    },
   ],
 
   /* ============ UJIAN AKHIR MODUL 0 ============ */
@@ -730,7 +869,7 @@ export const MODUL0 = {
     pass: 85,
     title: 'Ujian akhir Modul 0',
     intro:
-      'Ujian ini berisi 16 soal dari semua bab. Setiap soal hanya boleh dijawab SATU KALI dan tidak bisa diulang di tengah jalan. Nilai lulus: 85 (boleh salah maksimal 2 soal). Kalau belum lulus, tenang — kamu bisa mengulang ujian dengan urutan soal yang diacak ulang.',
+      'Ujian ini berisi 18 soal dari semua bab. Setiap soal hanya boleh dijawab SATU KALI dan tidak bisa diulang di tengah jalan. Nilai lulus: 85 (boleh salah maksimal 2 soal). Kalau belum lulus, tenang — kamu bisa mengulang ujian dengan urutan soal yang diacak ulang.',
     questions: [
       {
         type: 'mc',
@@ -839,6 +978,20 @@ export const MODUL0 = {
       },
       {
         type: 'mc',
+        q: 'Untuk memilih beberapa file pilihan (loncat-loncat) sekaligus, tahan tombol…',
+        options: ['Tab sambil klik', 'Ctrl sambil klik satu per satu', 'Enter sambil klik', 'Spasi sambil klik'],
+        answer: 1,
+        explain: 'Ctrl + klik memilih banyak file; Shift + klik memilih satu rentang.',
+      },
+      {
+        type: 'mc',
+        q: 'Ada yang mengaku petugas dan meminta password akunmu lewat chat. Sikapmu…',
+        options: ['Berikan, namanya juga petugas', 'Tolak — tidak ada petugas resmi yang meminta password', 'Berikan setengahnya saja', 'Minta dia menebak'],
+        answer: 1,
+        explain: 'Yang meminta password = penipu. Selalu.',
+      },
+      {
+        type: 'mc',
         q: 'Sebelum mencabut flashdisk, sebaiknya…',
         options: ['Langsung cabut saja', 'Klik kanan flashdisk lalu pilih Eject', 'Matikan WiFi', 'Tekan Ctrl + V'],
         answer: 1,
@@ -849,7 +1002,7 @@ export const MODUL0 = {
 }
 
 // Item progres Modul 0 (untuk perhitungan persentase di dashboard):
-// 7 bab + 1 drill + 1 ujian akhir = 9 langkah.
+// 8 bab + 1 drill + 1 ujian akhir = 10 langkah.
 export const M0_ITEMS = [
-  'm0.b1', 'm0.b2', 'm0.b3', 'm0.b4', 'm0.b5', 'm0.b6', 'm0.b7', 'm0.drill', 'm0.final',
+  'm0.b1', 'm0.b2', 'm0.b3', 'm0.b4', 'm0.b5', 'm0.b6', 'm0.b7', 'm0.b8', 'm0.drill', 'm0.final',
 ]
