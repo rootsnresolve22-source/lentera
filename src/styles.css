@@ -1101,3 +1101,19 @@ kbd {
 @media print {
   * { animation: none !important; transition: none !important; box-shadow: none !important; }
 }
+
+/* ===================== v0.5.0 — Buku saku PDF ===================== */
+.pdf-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  background: var(--card);
+  border: 1.5px dashed var(--flame);
+  border-radius: var(--radius);
+}
+.pdf-card strong { display: block; font-size: 14.5px; }
+.pdf-card span { font-size: 12.5px; color: var(--ink-soft); }
+.pdf-card a { white-space: nowrap; text-decoration: none; }

@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **0.4.0 · Penempatan Transparan + Animasi**
+- Versi: **0.5.0 · Bundle 2 — PDF Modul 0**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -19,11 +19,17 @@ created by **Mohammad Dimas Priambodo**
 - Panel Admin (khusus admin): tabel semua peserta + Indeks Lentera (Penguasaan 50% · Ketelitian 20% · Kecepatan 15% · Kerajinan 15%)
 - Rapot per peserta siap CETAK: identitas & jalur, rincian per langkah, kehadiran, catatan otomatis (termasuk pertumbuhan dari skor penempatan), area tanda tangan
 - Animasi native-feel: transisi layar, api lentera berkedip, guncangan jawaban salah, perayaan partikel saat lulus, skor berhitung naik — otomatis nonaktif bila pengguna menyetel "kurangi gerakan"
+- Buku saku PDF Modul 0 (31 halaman, A4) di `public/Lentera-Modul-0.pdf` + tombol unduh di halaman Modul 0 — dibangkitkan dari sumber konten yang sama
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.4.0 · Penempatan Transparan + Animasi**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.5.0 · Bundle 2 — PDF Modul 0**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
 - Versi PDF modul menyusul di bundle berikutnya, dibangkitkan dari sumber konten yang sama (`src/content/modul0.js`)
+
+## Regenerasi PDF (setelah konten berubah)
+1. `npx esbuild scripts/render-svg.jsx --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/lentera-pdf/render.cjs && node /tmp/lentera-pdf/render.cjs`
+2. Konversi SVG ke PNG (cairosvg, skala 2.2) lalu `python3 scripts/build-pdf.py`
+3. Salin hasilnya ke `public/Lentera-Modul-0.pdf`

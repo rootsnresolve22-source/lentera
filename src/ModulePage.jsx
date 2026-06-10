@@ -22,6 +22,15 @@ export default function ModulePage({ progressMap, track = 'pemula', onOpenBab, o
       <p className="lesson-eyebrow">Modul 0 · {doneCount} dari {2 + MODUL0.bab.length} langkah selesai</p>
       <h1 className="lesson-title">Dasar komputer</h1>
       <p className="lesson-desc">{MODUL0.intro}</p>
+      <div className="pdf-card">
+        <div>
+          <strong>Buku saku PDF Modul 0</strong>
+          <span>31 halaman, materi sama persis — enak dibaca di HP atau dicetak.</span>
+        </div>
+        <a className="btn-ghost btn-sm no-print" href="/Lentera-Modul-0.pdf" download>
+          Unduh PDF
+        </a>
+      </div>
       {cepat && (
         <div className="blk-box blk-tip">
           <span className="box-label">Jalur Cepat</span>

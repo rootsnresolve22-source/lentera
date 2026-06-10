@@ -260,8 +260,8 @@ export function LaptopDiagram({ highlight = [], onPart = null, labels = true }) 
         <g fontSize="12.5" fontWeight="700" fill={C.soft}>
           <line x1="92" y1="60" x2="46" y2="50" stroke={C.faint} strokeWidth="1.5" />
           <text x="8" y="44">Layar</text>
-          <line x1="338" y1="174" x2="376" y2="146" stroke={C.faint} strokeWidth="1.5" />
-          <text x="332" y="136">Tombol power</text>
+          <line x1="338" y1="174" x2="372" y2="146" stroke={C.faint} strokeWidth="1.5" />
+          <text x="416" y="136" textAnchor="end">Tombol power</text>
           <line x1="102" y1="194" x2="74" y2="124" stroke={C.faint} strokeWidth="1.5" />
           <text x="34" y="116">Keyboard</text>
           <line x1="216" y1="242" x2="216" y2="276" stroke={C.faint} strokeWidth="1.5" />
@@ -343,7 +343,7 @@ export function TaskbarDiagram({ highlight = [], onPart = null, menuOpen = false
             <circle cx="34" cy="193" r="7" fill="none"
               stroke={hot('power') ? '#fff' : C.ink} strokeWidth="2" />
             <line x1="34" y1="186" x2="34" y2="192" stroke={hot('power') ? '#fff' : C.ink} strokeWidth="2" />
-            <text x="48" y="197" fontSize="11.5" fontWeight="700" fill={hot('power') ? '#fff' : C.ink}>Power / Shut down</text>
+            <text x="48" y="197" fontSize="11.5" fontWeight="700" fill={hot('power') ? '#fff' : C.ink}>Shut down</text>
           </g>
         </g>
       )}
