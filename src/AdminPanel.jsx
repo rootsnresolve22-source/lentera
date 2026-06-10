@@ -140,7 +140,16 @@ function Rapor({ d, generatedAt, onBack }) {
                   <td>{s.map[e.module.final.id]?.attempts ?? '—'}</td>
                 </tr>
               )
-              return [head, ...babRows, ...drillRow, finalRow]
+              const praktikRows = e.module.praktik ? [(
+                <tr key={e.module.praktik.id}>
+                  <td>{e.module.praktik.title} (lulus {e.module.praktik.pass})</td>
+                  <td>{s.praktiks[e.module.id] == null ? 'Belum' : s.praktiks[e.module.id] >= e.module.praktik.pass ? 'LULUS' : 'Belum lulus'}</td>
+                  <td>{s.praktiks[e.module.id] == null ? '—' : `Nilai terbaik ${s.praktiks[e.module.id]}`}</td>
+                  <td>{fmtDetik(s.map[e.module.praktik.id]?.seconds)}</td>
+                  <td>{s.map[e.module.praktik.id]?.attempts ?? '—'}</td>
+                </tr>
+              )] : []
+              return [head, ...babRows, ...drillRow, ...praktikRows, finalRow]
             })}
           </tbody>
         </table>

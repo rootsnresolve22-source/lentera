@@ -1,6 +1,6 @@
 import { itemDone, moduleDoneCount } from './content'
 
-export default function ModulePage({ entry, progressMap, track = 'pemula', onOpenBab, onOpenDrill, onOpenFinal, onBack }) {
+export default function ModulePage({ entry, progressMap, track = 'pemula', onOpenBab, onOpenDrill, onOpenFinal, onOpenPraktik, onBack }) {
   const { module, items, hasDrill, hasPdf } = entry
   const cepat = track === 'cepat' && module.id === 'm0'
 
@@ -9,11 +9,16 @@ export default function ModulePage({ entry, progressMap, track = 'pemula', onOpe
   const finalScore = progressMap[module.final.id]?.score ?? null
   const finalPassed = finalScore !== null && Number(finalScore) >= module.final.pass
 
+  const praktik = module.praktik ?? null
+  const praktikScore = praktik ? progressMap[praktik.id]?.score ?? null : null
+  const praktikPassed = !!praktik && praktikScore !== null && Number(praktikScore) >= praktik.pass
+
   const allBab = module.bab.every((b) => babDone(b.id))
   const drillUnlocked = hasDrill && (cepat || babDone('m0.b3'))
+  const praktikUnlocked = !!praktik && allBab
   const finalUnlocked = hasDrill
     ? (cepat ? drillScore >= 1 : allBab && drillScore >= 1)
-    : allBab
+    : praktik ? praktikPassed : allBab
 
   const doneCount = moduleDoneCount(progressMap, entry)
   const [judulKiri, judulKanan] = module.title.split(' — ')
@@ -71,7 +76,7 @@ export default function ModulePage({ entry, progressMap, track = 'pemula', onOpe
         })}
       </div>
 
-      <p className="section-label">{hasDrill ? 'Latihan dan ujian' : 'Ujian'}</p>
+      <p className="section-label">{hasDrill ? 'Latihan dan ujian' : praktik ? 'Ujian praktek dan teori' : 'Ujian'}</p>
 
       {hasDrill && (
         <div className={`step is-${drillScore >= 1 ? 'done' : drillUnlocked ? 'next' : 'locked'}`} style={{ marginLeft: 0 }}>
@@ -84,6 +89,23 @@ export default function ModulePage({ entry, progressMap, track = 'pemula', onOpe
             </div>
             <p className="step-desc">
               Tiga level latihan dengan papan ketik penunjuk. Minimal Level 1 untuk membuka ujian akhir.
+            </p>
+          </button>
+        </div>
+      )}
+
+      {praktik && (
+        <div className={`step is-${praktikPassed ? 'done' : praktikUnlocked ? 'next' : 'locked'}`} style={{ marginLeft: 0 }}>
+          <button className="step-card step-btn" disabled={!praktikUnlocked} onClick={onOpenPraktik}>
+            <div className="step-head">
+              <span className="step-title">{praktik.title}</span>
+              <span className={`chip ${praktikPassed ? 'chip-done' : praktikUnlocked ? 'chip-next' : 'chip-locked'}`}>
+                {praktikScore !== null ? `Nilai ${praktikScore}` : praktikUnlocked ? 'Siap dikerjakan' : 'Selesaikan semua bab'}
+              </span>
+            </div>
+            <p className="step-desc">
+              Puncak modul: buat dokumen sungguhan di Word, unggah file .docx-mu — dinilai
+              otomatis per butir rubrik dengan saran perbaikan. Lulus {praktik.pass}.
             </p>
           </button>
         </div>
@@ -103,7 +125,7 @@ export default function ModulePage({ entry, progressMap, track = 'pemula', onOpe
               ? 'Kamu sudah memenuhi syarat — semoga berhasil!'
               : hasDrill
               ? (cepat ? 'Terbuka setelah Level 1 mengetik lulus.' : 'Terbuka setelah semua bab selesai dan Level 1 mengetik lulus.')
-              : 'Terbuka setelah semua bab selesai.'}
+              : praktik ? 'Terbuka setelah ujian praktek lulus.' : 'Terbuka setelah semua bab selesai.'}
           </p>
         </button>
       </div>

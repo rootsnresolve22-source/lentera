@@ -1124,3 +1124,69 @@ kbd {
   font-weight: 800;
   color: var(--ink);
 }
+
+/* ===================== v0.7.0 — Kamus Pintasan & Ujian Praktek ===================== */
+.hk-search {
+  width: 100%;
+  padding: 11px 14px;
+  margin: 4px 0 14px;
+  font: inherit;
+  font-size: 15px;
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  color: var(--ink);
+}
+.hk-search:focus { outline: none; border-color: var(--flame); }
+.hk-group { margin-bottom: 6px; }
+.hk-list { list-style: none; margin: 0 0 14px; padding: 0; }
+.hk-row {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 9px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.hk-keys { flex: 0 0 168px; display: flex; flex-wrap: wrap; align-items: center; gap: 2px; }
+.hk-kbd {
+  display: inline-block;
+  padding: 2.5px 8px;
+  font: 700 12.5px/1.5 inherit;
+  font-family: inherit;
+  background: var(--card);
+  border: 1.5px solid var(--ink);
+  border-bottom-width: 3px;
+  border-radius: 7px;
+  white-space: nowrap;
+}
+.hk-plus { margin: 0 3px; color: var(--ink-soft); font-weight: 700; }
+.hk-desc { display: flex; flex-direction: column; gap: 1px; font-size: 14px; }
+.hk-desc em { color: var(--ink-soft); font-style: normal; font-size: 13px; }
+@media (max-width: 480px) {
+  .hk-row { flex-direction: column; gap: 4px; }
+  .hk-keys { flex-basis: auto; }
+}
+
+.upl {
+  margin: 16px 0;
+  padding: 16px;
+  background: var(--card);
+  border: 1.5px dashed var(--flame);
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.upl-input { font: inherit; font-size: 14px; }
+.sub-crit { list-style: none; margin: 12px 0 0; padding: 0; }
+.sub-crit li {
+  display: flex;
+  gap: 10px;
+  padding: 9px 4px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14.5px;
+}
+.sub-crit li em { color: var(--ink-soft); font-style: normal; display: block; font-size: 13.5px; }
+.sub-mark { font-weight: 900; flex: 0 0 18px; }
+.sub-crit li.ok .sub-mark { color: var(--sea, #0f766e); }
+.sub-crit li.no .sub-mark { color: #b3261e; }

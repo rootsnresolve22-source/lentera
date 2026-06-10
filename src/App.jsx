@@ -7,6 +7,8 @@ import TypingDrill from './TypingDrill'
 import FinalTest from './FinalTest'
 import Placement from './Placement'
 import AdminPanel from './AdminPanel'
+import SubmissionTest from './SubmissionTest'
+import HotkeysPage from './HotkeysPage'
 import { getEntry, findBab } from './content'
 import * as api from './api'
 
@@ -140,6 +142,7 @@ export default function App() {
           onOpenBab={(id) => go('lesson', { babId: id })}
           onOpenDrill={() => go('drill')}
           onOpenFinal={() => go('final', { moduleId: entry.module.id })}
+          onOpenPraktik={() => go('praktik', { moduleId: entry.module.id })}
           onBack={() => go('dashboard')}
         />
       </div>
@@ -182,6 +185,31 @@ export default function App() {
     )
   }
 
+  if (view.name === 'praktik') {
+    const entry = getEntry(view.moduleId ?? 'm1')
+    const praktik = entry.module.praktik
+    return (
+      <div className="shell">
+        <SubmissionTest
+          praktik={praktik}
+          bestScore={progressMap[praktik.id]?.score ?? null}
+          onFinish={(score, passed, seconds, meta) =>
+            saveProgress(praktik.id, passed ? 'selesai' : 'sedang', score, { seconds, meta })
+          }
+          onBack={() => go('module', { moduleId: entry.module.id })}
+        />
+      </div>
+    )
+  }
+
+  if (view.name === 'hotkeys') {
+    return (
+      <div className="shell">
+        <HotkeysPage onBack={() => go('dashboard')} />
+      </div>
+    )
+  }
+
   if (view.name === 'final') {
     const entry = getEntry(view.moduleId ?? 'm0')
     const finalId = entry.module.final.id
@@ -210,6 +238,7 @@ export default function App() {
       track={track}
       onLogout={handleLogout}
       onOpenModule={(id) => go('module', { moduleId: id ?? 'm0' })}
+      onOpenHotkeys={() => go('hotkeys')}
       onOpenAdmin={isAdmin ? () => go('admin') : null}
     />
   )

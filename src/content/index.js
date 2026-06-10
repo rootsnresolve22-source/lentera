@@ -47,6 +47,10 @@ export function itemDone(progressMap, id) {
     const e = getEntry(id.split('.')[0])
     return Number(p.score ?? 0) >= (e?.module.final.pass ?? 85)
   }
+  if (id.endsWith('.praktik')) {
+    const e = getEntry(id.split('.')[0])
+    return Number(p.score ?? 0) >= (e?.module.praktik?.pass ?? 85)
+  }
   return p.status === 'selesai'
 }
 

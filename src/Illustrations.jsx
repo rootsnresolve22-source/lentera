@@ -492,6 +492,8 @@ export function WifiPanel({ highlight = [], onPart = null }) {
 const MAP = {
   keyboard: KeyboardMap,
   word: WordDiagram,
+  excel: ExcelDiagram,
+  ppt: PowerPointDiagram,
   savedialog: SaveDialog,
   printdialog: PrintDialog,
   mouse: MouseDiagram,
@@ -711,6 +713,161 @@ export function PrintDialog({ highlight = [], onPart = null }) {
         <line x1="302" y1="126" x2="360" y2="126" />
       </g>
       <text x="344" y="230" textAnchor="middle" fontSize="9" fill={C.soft}>1 of 1</text>
+    </svg>
+  )
+}
+
+/* ================= EXCEL (jendela utama) ================= */
+
+export function ExcelDiagram({ highlight = [], onPart = null }) {
+  const hot = (id) => highlight.includes(id)
+  const cols = ['A', 'B', 'C', 'D', 'E', 'F']
+  const cw = 64, rh = 22, gx = 36, gy = 118
+  return (
+    <svg viewBox="0 0 460 330" className="diagram" role="img" aria-label="Gambar jendela Microsoft Excel">
+      <rect x="4" y="4" width="452" height="322" rx="10" fill={C.paper} stroke={C.ink} strokeWidth="2.5" />
+      <rect x="4" y="4" width="452" height="30" rx="10" fill="#1e7145" />
+      <rect x="4" y="22" width="452" height="12" fill="#1e7145" />
+      <text x="230" y="23" textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#fff">Belanja Dapur - Excel</text>
+      <g stroke="#fff" strokeWidth="1.8">
+        <line x1="398" y1="19" x2="408" y2="19" />
+        <rect x="416" y="13" width="11" height="11" fill="none" />
+        <path d="M436 13 l10 10 M446 13 l-10 10" />
+      </g>
+      {/* Ribbon mini + AutoSum */}
+      <rect x="4" y="34" width="452" height="34" fill="#f6f8f9" stroke={C.line} strokeWidth="1" />
+      <text x="16" y="55" fontSize="10.5" fontWeight="700" fill={C.ink}>Home</text>
+      <text x="62" y="55" fontSize="10.5" fill={C.soft}>Insert</text>
+      <text x="106" y="55" fontSize="10.5" fill={C.soft}>Formulas</text>
+      <g {...partProps('autosum', onPart)}>
+        <title>Tombol AutoSum (jumlah otomatis)</title>
+        <rect x="356" y="40" width="92" height="22" rx="5"
+          fill={hot('autosum') ? C.flame : C.paper} stroke={hot('autosum') ? C.flame : C.line} strokeWidth="1.4" />
+        <text x="402" y="55" textAnchor="middle" fontSize="11" fontWeight="800"
+          fill={hot('autosum') ? '#fff' : C.ink}>{'\u03a3'} AutoSum</text>
+      </g>
+      {/* Name box + formula bar */}
+      <g {...partProps('namebox', onPart)}>
+        <title>Name Box (alamat sel aktif)</title>
+        <rect x="10" y="74" width="58" height="22" rx="4"
+          fill={hot('namebox') ? C.flameSoft : '#fff'} stroke={hot('namebox') ? C.flame : C.line} strokeWidth="1.4" />
+        <text x="39" y="89" textAnchor="middle" fontSize="10.5" fontWeight="800" fill={C.ink}>D2</text>
+      </g>
+      <g {...partProps('formulabar', onPart)}>
+        <title>Formula Bar (isi/rumus sel)</title>
+        <rect x="74" y="74" width="376" height="22" rx="4"
+          fill={hot('formulabar') ? C.flameSoft : '#fff'} stroke={hot('formulabar') ? C.flame : C.line} strokeWidth="1.4" />
+        <text x="82" y="89" fontSize="10.5" fontWeight="700" fill={C.ink}>=B2*C2</text>
+      </g>
+      {/* Grid */}
+      <rect x="10" y={gy - rh} width={26} height={rh * 7 + rh} fill="#eef1f3" stroke={C.line} strokeWidth="1" />
+      {cols.map((c, i) => (
+        <g key={c}>
+          <rect x={gx + i * cw} y={gy - rh} width={cw} height={rh} fill="#eef1f3" stroke={C.line} strokeWidth="1" />
+          <text x={gx + i * cw + cw / 2} y={gy - 7} textAnchor="middle" fontSize="10" fontWeight="700" fill={C.soft}>{c}</text>
+        </g>
+      ))}
+      {[1, 2, 3, 4, 5, 6, 7].map((r) => (
+        <g key={r}>
+          <text x="23" y={gy + (r - 1) * rh + 15} textAnchor="middle" fontSize="10" fontWeight="700" fill={C.soft}>{r}</text>
+          {cols.map((c, i) => (
+            <rect key={c} x={gx + i * cw} y={gy + (r - 1) * rh} width={cw} height={rh} fill="#fff" stroke={C.line} strokeWidth="0.8" />
+          ))}
+        </g>
+      ))}
+      <g fontSize="9.5" fill={C.ink}>
+        <text x={gx + 6} y={gy + 15} fontWeight="800">Barang</text>
+        <text x={gx + cw + 6} y={gy + 15} fontWeight="800">Harga</text>
+        <text x={gx + 2 * cw + 6} y={gy + 15} fontWeight="800">Jumlah</text>
+        <text x={gx + 3 * cw + 6} y={gy + 15} fontWeight="800">Total</text>
+        <text x={gx + 6} y={gy + rh + 15}>Beras</text>
+        <text x={gx + cw + 6} y={gy + rh + 15}>15000</text>
+        <text x={gx + 2 * cw + 6} y={gy + rh + 15}>2</text>
+        <text x={gx + 6} y={gy + 2 * rh + 15}>Minyak</text>
+        <text x={gx + cw + 6} y={gy + 2 * rh + 15}>18000</text>
+        <text x={gx + 2 * cw + 6} y={gy + 2 * rh + 15}>1</text>
+      </g>
+      <g {...partProps('cell', onPart)}>
+        <title>Sel aktif D2</title>
+        <rect x={gx + 3 * cw} y={gy + rh} width={cw} height={rh}
+          fill={hot('cell') ? C.flameSoft : '#fff'} stroke={hot('cell') ? C.flame : '#1e7145'} strokeWidth="2.2" />
+        <text x={gx + 3 * cw + 6} y={gy + rh + 15} fontSize="9.5" fontWeight="700" fill={C.ink}>=B2*C2</text>
+      </g>
+      {/* Sheet tabs */}
+      <rect x="4" y="296" width="452" height="30" fill="#f6f8f9" stroke={C.line} strokeWidth="1" />
+      <g {...partProps('sheettab', onPart)}>
+        <title>Tab lembar kerja (Sheet)</title>
+        <rect x="14" y="301" width="64" height="20" rx="4"
+          fill={hot('sheettab') ? C.flame : '#fff'} stroke={hot('sheettab') ? C.flame : C.line} strokeWidth="1.4" />
+        <text x="46" y="315" textAnchor="middle" fontSize="9.5" fontWeight="700" fill={hot('sheettab') ? '#fff' : C.ink}>Sheet1</text>
+      </g>
+      <rect x="84" y="301" width="24" height="20" rx="4" fill="#fff" stroke={C.line} strokeWidth="1.2" />
+      <text x="96" y="316" textAnchor="middle" fontSize="12" fontWeight="700" fill={C.soft}>+</text>
+    </svg>
+  )
+}
+
+/* ================= POWERPOINT (jendela utama) ================= */
+
+export function PowerPointDiagram({ highlight = [], onPart = null }) {
+  const hot = (id) => highlight.includes(id)
+  return (
+    <svg viewBox="0 0 460 330" className="diagram" role="img" aria-label="Gambar jendela Microsoft PowerPoint">
+      <rect x="4" y="4" width="452" height="322" rx="10" fill={C.paper} stroke={C.ink} strokeWidth="2.5" />
+      <rect x="4" y="4" width="452" height="30" rx="10" fill="#b7472a" />
+      <rect x="4" y="22" width="452" height="12" fill="#b7472a" />
+      <text x="230" y="23" textAnchor="middle" fontSize="11.5" fontWeight="700" fill="#fff">Perkenalan Diri - PowerPoint</text>
+      <g stroke="#fff" strokeWidth="1.8">
+        <line x1="398" y1="19" x2="408" y2="19" />
+        <rect x="416" y="13" width="11" height="11" fill="none" />
+        <path d="M436 13 l10 10 M446 13 l-10 10" />
+      </g>
+      <rect x="4" y="34" width="452" height="34" fill="#f6f8f9" stroke={C.line} strokeWidth="1" />
+      <text x="16" y="55" fontSize="10.5" fontWeight="700" fill={C.ink}>Home</text>
+      <g {...partProps('newslide', onPart)}>
+        <title>Tombol New Slide (slide baru)</title>
+        <rect x="58" y="40" width="86" height="22" rx="5"
+          fill={hot('newslide') ? C.flame : C.paper} stroke={hot('newslide') ? C.flame : C.line} strokeWidth="1.4" />
+        <text x="101" y="55" textAnchor="middle" fontSize="10" fontWeight="800" fill={hot('newslide') ? '#fff' : C.ink}>+ New Slide</text>
+      </g>
+      <g {...partProps('present', onPart)}>
+        <title>Tombol Slide Show (mulai presentasi)</title>
+        <rect x="346" y="40" width="102" height="22" rx="5"
+          fill={hot('present') ? C.flame : C.paper} stroke={hot('present') ? C.flame : C.line} strokeWidth="1.4" />
+        <g fill={hot('present') ? '#fff' : C.ink}>
+          <path d="M356 45 l8 6 l-8 6 Z" />
+          <text x="404" y="55" textAnchor="middle" fontSize="10" fontWeight="800">Slide Show</text>
+        </g>
+      </g>
+      {/* Panel thumbnail kiri */}
+      <g {...partProps('thumbs', onPart)}>
+        <title>Panel daftar slide (kiri)</title>
+        <rect x="4" y="68" width="96" height="258" fill={hot('thumbs') ? C.flameSoft : '#eef1f3'} stroke={C.line} strokeWidth="1" />
+        {[1, 2, 3].map((n) => (
+          <g key={n}>
+            <text x="14" y={86 + (n - 1) * 62} fontSize="9" fontWeight="700" fill={C.soft}>{n}</text>
+            <rect x="22" y={74 + (n - 1) * 62} width="70" height="44" rx="3"
+              fill="#fff" stroke={n === 1 ? '#b7472a' : C.line} strokeWidth={n === 1 ? 2 : 1} />
+            <line x1="30" y1={88 + (n - 1) * 62} x2="84" y2={88 + (n - 1) * 62} stroke={C.line} strokeWidth="3" strokeLinecap="round" />
+            <line x1="30" y1={98 + (n - 1) * 62} x2="74" y2={98 + (n - 1) * 62} stroke={C.line} strokeWidth="2" strokeLinecap="round" />
+          </g>
+        ))}
+      </g>
+      {/* Slide besar */}
+      <g {...partProps('slidearea', onPart)}>
+        <title>Slide yang sedang disunting</title>
+        <rect x="116" y="84" width="324" height="196" rx="4"
+          fill={hot('slidearea') ? C.flameSoft : '#fff'} stroke={C.ink} strokeWidth="1.6" />
+        <rect x="140" y="104" width="276" height="38" rx="3" fill="none" stroke={C.faint} strokeWidth="1.2" strokeDasharray="5 4" />
+        <text x="278" y="128" textAnchor="middle" fontSize="13" fontWeight="800" fill={C.ink}>PERKENALAN DIRI</text>
+        <rect x="140" y="156" width="276" height="104" rx="3" fill="none" stroke={C.faint} strokeWidth="1.2" strokeDasharray="5 4" />
+        <g stroke={C.line} strokeWidth="4" strokeLinecap="round">
+          <line x1="156" y1="176" x2="380" y2="176" />
+          <line x1="156" y1="194" x2="350" y2="194" />
+          <line x1="156" y1="212" x2="368" y2="212" />
+        </g>
+      </g>
+      <text x="278" y="300" textAnchor="middle" fontSize="9" fill={C.soft}>Slide 1 of 3</text>
     </svg>
   )
 }

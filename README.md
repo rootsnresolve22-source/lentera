@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **0.6.0 · Bundle 3 — Word Dasar**
+- Versi: **0.7.0 · D1 — Praktek, Kamus Pintasan, M1 Diperdalam**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -26,7 +26,7 @@ created by **Mohammad Dimas Priambodo**
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.6.0 · Bundle 3 — Word Dasar**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v0.7.0 · D1 — Praktek, Kamus Pintasan, M1 Diperdalam**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
@@ -36,3 +36,8 @@ Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa
 1. `npx esbuild scripts/render-svg.jsx --bundle --platform=node --format=cjs --jsx=automatic --outfile=/tmp/lentera-pdf/render.cjs && node /tmp/lentera-pdf/render.cjs`
 2. Konversi SVG ke PNG (cairosvg, skala 2.2) lalu `python3 scripts/build-pdf.py`
 3. Salin hasilnya ke `public/Lentera-Modul-0.pdf`
+
+## Baru di v0.7.0 (Deliverable 1)
+- **Ujian praktek Modul 1**: peserta membuat dokumen Word sungguhan (Surat Izin) lalu mengunggah file `.docx` — dinilai otomatis 7 butir rubrik (lulus 80), hasil per butir transparan dengan saran perbaikan. Berkas baru: `src/SubmissionTest.jsx`.
+- **Kamus Pintasan**: glosarium hotkeys lengkap 8 kategori (~75 entri, bilingual Inggris-layar/Indonesia), bebas diakses semua peserta dari beranda, bisa dicari dan dicetak. Berkas baru: `src/HotkeysPage.jsx`, `src/content/hotkeys.js`.
+- **Modul 1 diperdalam (v2)**: materi lebih panjang dan bilingual berpasangan (Print/Cetak, Save/Simpan), F12 dan Ctrl+W/Ctrl+H/Shift+F3 dibahas, 36 kuis; alur baru: bab → ujian praktek → ujian teori.

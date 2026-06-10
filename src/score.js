@@ -48,11 +48,21 @@ export function hitungIndeks({ progress, activity14, track }) {
     finals[e.module.id] = p?.score != null ? Number(p.score) : null
   }
 
+  // Nilai ujian praktek per modul (bila modulnya punya)
+  const praktiks = {}
+  for (const e of MODULES) {
+    if (!e.module.praktik) continue
+    const p = map[e.module.praktik.id]
+    praktiks[e.module.id] = p?.score != null ? Number(p.score) : null
+  }
+
   const drill = map['m0.drill']
   const drillLevel = Math.min(3, Number(drill?.score ?? 0))
 
   // P — Penguasaan: ujian (rata modul terbuka yang sudah diuji), drill, persen bab modul terbuka
-  const finalScores = open.map((e) => finals[e.module.id]).filter((v) => v != null)
+  const finalScores = open
+    .flatMap((e) => [finals[e.module.id], e.module.praktik ? praktiks[e.module.id] : null])
+    .filter((v) => v != null)
   const finalAvg = finalScores.length
     ? Math.round(finalScores.reduce((a, b) => a + b, 0) / finalScores.length)
     : 0
@@ -108,7 +118,7 @@ export function hitungIndeks({ progress, activity14, track }) {
 
   return {
     P, T, C, K, indeks, predikat,
-    finals, finalBest: finals.m0, drillLevel,
+    finals, praktiks, finalBest: finals.m0, drillLevel,
     langkahSelesai, totalLangkah, openIds: open.map((e) => e.module.id), map,
   }
 }
@@ -127,7 +137,7 @@ export function insightOtomatis(s, activity14, track, placementScore) {
   if (s.openIds.includes('m1')) {
     out.push(
       s.finals.m1 != null
-        ? `Modul Word: nilai ujian ${s.finals.m1}.`
+        ? `Modul Word: teori ${s.finals.m1}${s.praktiks.m1 != null ? `, praktek ${s.praktiks.m1}` : ', praktek belum'}.`
         : 'Modul Word sudah terbuka — arahkan untuk mulai Bab 1 Word.'
     )
   }
