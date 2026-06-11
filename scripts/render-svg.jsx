@@ -1,12 +1,18 @@
-// Render semua diagram Modul 0 menjadi SVG statis untuk PDF.
-// Dijalankan lewat bundel esbuild (JSX -> JS) di Node.
+// Render semua diagram satu modul menjadi SVG statis untuk PDF.
+// Pilih modul lewat env MOD (m0..m4). Dijalankan lewat bundel esbuild di Node.
 import { renderToStaticMarkup } from 'react-dom/server'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { Diagram } from '../src/Illustrations'
 import Lamp from '../src/Lamp'
 import { MODUL0 } from '../src/content/modul0'
+import { MODUL1 } from '../src/content/modul1'
+import { MODUL2 } from '../src/content/modul2'
+import { MODUL3 } from '../src/content/modul3'
+import { MODUL4 } from '../src/content/modul4'
 
-const OUT = '/tmp/lentera-pdf'
+const MOD = process.env.MOD || 'm0'
+const M = { m0: MODUL0, m1: MODUL1, m2: MODUL2, m3: MODUL3, m4: MODUL4 }[MOD]
+const OUT = `/tmp/lentera-pdf-${MOD}`
 mkdirSync(OUT + '/diagrams', { recursive: true })
 
 const manifest = {}
@@ -21,23 +27,13 @@ function renderDiagram(kind, props) {
   manifest[key] = file
 }
 
-// 1) Semua gambar materi
-for (const bab of MODUL0.bab) {
-  for (const b of bab.blocks) {
-    if (b.t === 'img') renderDiagram(b.kind, b.props)
-  }
-  // 2) Gambar soal latihan (hotspot) per bab
-  for (const q of bab.quiz) {
-    if (q.img) renderDiagram(q.img.kind, q.img.props)
-  }
+for (const bab of M.bab) {
+  for (const b of bab.blocks) if (b.t === 'img') renderDiagram(b.kind, b.props)
+  for (const q of bab.quiz) if (q.img) renderDiagram(q.img.kind, q.img.props)
 }
-// 3) Gambar soal ujian akhir (untuk lembar latihan tambahan? tidak dipakai — lewati)
 
-// 4) Lampu lentera untuk sampul
 const lampSvg = renderToStaticMarkup(<Lamp size={280} />)
 writeFileSync(`${OUT}/lamp.svg`, lampSvg)
-
-// 5) Konten sebagai JSON untuk pembangun PDF (python)
-writeFileSync(`${OUT}/content.json`, JSON.stringify(MODUL0, null, 1))
+writeFileSync(`${OUT}/content.json`, JSON.stringify(M, null, 1))
 writeFileSync(`${OUT}/manifest.json`, JSON.stringify(manifest, null, 1))
-console.log('diagram unik:', Object.keys(manifest).length, '| bab:', MODUL0.bab.length)
+console.log(MOD, '| diagram unik:', Object.keys(manifest).length, '| bab:', M.bab.length)

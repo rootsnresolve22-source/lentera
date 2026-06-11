@@ -183,6 +183,30 @@ function Rapor({ d, generatedAt, onBack }) {
 
 /* ================= PANEL UTAMA ================= */
 
+
+function unduhCsv(rows) {
+  const esc = (x) => `"${String(x ?? '').replace(/"/g, '""')}"`
+  const head = ['Nama', 'Username', 'Jalur', 'Langkah', 'Total langkah',
+    'Ujian M0', 'Ujian M1', 'Ujian M2', 'Ujian M3', 'Ujian M4',
+    'Praktek M1', 'Praktek M2', 'Praktek M3', 'Level ketik',
+    'P', 'T', 'C', 'K', 'Indeks', 'Predikat']
+  const lines = rows.map((p) => [
+    p.user.full_name, p.user.username, jalurLabel(p.track),
+    p.skor.langkahSelesai, p.skor.totalLangkah,
+    ...['m0', 'm1', 'm2', 'm3', 'm4'].map((k) => p.skor.finals[k] ?? ''),
+    ...['m1', 'm2', 'm3'].map((k) => p.skor.praktiks?.[k] ?? ''),
+    p.skor.drillLevel ?? '', p.skor.P, p.skor.T, p.skor.C, p.skor.K,
+    p.skor.indeks, p.skor.predikat,
+  ].map(esc).join(';'))
+  const csv = '\uFEFF' + head.map(esc).join(';') + '\n' + lines.join('\n')
+  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `lentera-rekap-${new Date().toISOString().slice(0, 10)}.csv`
+  a.click()
+  URL.revokeObjectURL(url)
+}
+
 export default function AdminPanel({ token, onBack }) {
   const [data, setData] = useState(null)
   const [err, setErr] = useState(null)
@@ -212,7 +236,10 @@ export default function AdminPanel({ token, onBack }) {
       <div className="lesson">
         <button className="btn-back" onClick={onBack}>← Beranda</button>
         <p className="lesson-eyebrow">Panel Admin</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
         <h1 className="lesson-title">Pemantauan peserta</h1>
+          <button className="btn-ghost btn-sm no-print" onClick={() => unduhCsv(rows)}>Unduh rekap (Excel/CSV)</button>
+        </div>
         <p className="lesson-desc">
           Indeks Lentera = Penguasaan 50% + Ketelitian 20% + Kecepatan 15% + Kerajinan 15%.
           Klik nama peserta untuk membuka rapot lengkap yang siap dicetak.

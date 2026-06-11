@@ -23,7 +23,7 @@ function pesanMotivasi({ aktif, done, allComplete, streak, daysActive, finalAkti
   return 'Masuk ke aplikasi ini sendiri tadi adalah latihan pertamamu — sekarang lanjutkan ke bab pertama.'
 }
 
-export default function Dashboard({ user, progressMap, activity, track, onLogout, onOpenModule, onOpenHotkeys, onOpenAdmin }) {
+export default function Dashboard({ user, progressMap, activity, track, onLogout, onOpenModule, onOpenHotkeys, onOpenAdmin, onOpenCertificate }) {
   const firstName = (user.full_name || user.username).split(' ')[0]
 
   const aktif = activeEntry(progressMap)
@@ -57,6 +57,9 @@ export default function Dashboard({ user, progressMap, activity, track, onLogout
             <button className="btn-primary btn-sm" onClick={onOpenAdmin}>Panel Admin</button>
           )}
           <button className="btn-ghost" onClick={onOpenHotkeys}>Kamus Pintasan</button>
+          {allComplete && (
+            <button className="btn-primary" onClick={onOpenCertificate}>Sertifikat Kelulusan</button>
+          )}
           <button className="btn-ghost" onClick={onLogout}>Keluar</button>
         </div>
       </header>

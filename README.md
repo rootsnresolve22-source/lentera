@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **1.0.0 · Ready to Launch — Kurikulum Lengkap M0–M4**
+- Versi: **1.1.0 · Bukti & Arsip — Buku Saku, Sertifikat, Ekspor**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -26,7 +26,7 @@ created by **Mohammad Dimas Priambodo**
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v1.0.0 · Ready to Launch — Kurikulum Lengkap M0–M4**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v1.1.0 · Bukti & Arsip — Buku Saku, Sertifikat, Ekspor**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
@@ -49,3 +49,8 @@ Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa
 - **Mesin praktek multi-format**: pembongkar .docx/.xlsx/.pptx di browser, penilaian per rubrik dengan saran perbaikan.
 - **Gerbang berantai penuh**: M1 dibuka ujian M0 → M2 dibuka praktek Word → M3 dibuka praktek Excel → M4 dibuka praktek PowerPoint.
 - Ilustrasi PowerPoint kini punya kotak judul/isi yang dapat diklik; rapot & panel admin mencakup M0–M4.
+
+## Baru di v1.1.0 — Bukti & Arsip
+- **Buku saku PDF semua modul**: M1 Word (27 hal), M2 Excel (22), M3 PowerPoint (20), M4 Pelengkap (17) — pipeline render yang sama dengan buku M0; tiap modul kini punya tombol "Unduh PDF". Latihan tertulis per bab + kunci jawaban di belakang.
+- **Sertifikat Kelulusan**: tombol muncul di beranda saat seluruh M0–M4 tuntas — memuat nama, nilai ujian teori 5 modul, praktek 3 modul, Indeks Lentera + predikat, tanggal, dan tanda tangan pembimbing; cetak/simpan PDF dari browser.
+- **Ekspor rekap (Excel/CSV)**: satu klik di Panel Admin — 20 kolom (identitas, langkah, ujian M0–M4, praktek M1–M3, level ketik, P/T/C/K, Indeks, predikat), siap dibuka di Excel.

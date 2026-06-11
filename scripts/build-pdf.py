@@ -15,8 +15,21 @@ from reportlab.platypus import (
 )
 from reportlab.platypus.tableofcontents import TableOfContents
 
-BASE = '/tmp/lentera-pdf'
-OUT = f'{BASE}/Lentera-Modul-0.pdf'
+MOD = os.environ.get('MOD', 'm0')
+N = MOD[1:]
+SUB = {'0': 'Dasar Komputer', '1': 'Word Dasar', '2': 'Excel Dasar', '3': 'PowerPoint Dasar', '4': 'Pelengkap Kerja'}[N]
+TAG = {'0': 'Dari menyalakan laptop sampai mengetik 10 jari - ditulis sederhana untuk kamu yang baru mulai.',
+       '1': 'Dari kertas kosong sampai surat resmi yang rapi - Word untuk pekerjaan sehari-hari.',
+       '2': 'Dari kotak-kotak sel sampai rumus yang menghitung sendiri - Excel tanpa takut angka.',
+       '3': 'Dari slide pertama sampai tampil percaya diri - PowerPoint untuk presentasi kerja.',
+       '4': 'Email, PDF, cetak-pindai, dan internet sehat - bekal terakhir sebelum terjun bekerja.'}[N]
+NEXT = {'0': 'Lulus ujian ini berarti kamu resmi siap lanjut ke Modul Word.',
+        '1': 'Lulus berarti gerbang Modul Excel terbuka.',
+        '2': 'Lulus berarti gerbang Modul PowerPoint terbuka.',
+        '3': 'Lulus berarti gerbang Modul Pelengkap terbuka.',
+        '4': 'Lulus berarti seluruh kurikulum Lentera tuntas - saatnya sertifikat.'}[N]
+BASE = f'/tmp/lentera-pdf-{MOD}'
+OUT = f'{BASE}/Lentera-Modul-{N}.pdf'
 M = json.load(open(f'{BASE}/content.json'))
 MAN = json.load(open(f'{BASE}/manifest.json'))
 
@@ -40,6 +53,7 @@ CONTENT_W = PAGE_W - 2 * MARGIN
 
 # ---------- Sanitasi teks (font standar = WinAnsi/cp1252) ----------
 SUBST = {
+    'lambang Σ': 'lambang sigma', 'Σ ': '', 'Σ': 'sigma',
     '\u25c0': 'Panah Kiri', '\u25b6': 'Panah Kanan',
     '\u25b2': 'Panah Atas', '\u25bc': 'Panah Bawah',
     '\u203a': '>', '\u25a2': '[ ]', '\u2192': '->', '\u00d7': 'x',
@@ -175,7 +189,7 @@ def on_page(canvas, doc):
         canvas.setFont(FB, 8); canvas.setFillColor(FLAME_DEEP)
         canvas.drawString(MARGIN, PAGE_H - 10.2 * mm, 'LENTERA')
         canvas.setFont(F, 8); canvas.setFillColor(SOFT)
-        canvas.drawRightString(PAGE_W - MARGIN, PAGE_H - 10.2 * mm, 'Buku Saku Modul 0 - Dasar Komputer')
+        canvas.drawRightString(PAGE_W - MARGIN, PAGE_H - 10.2 * mm, f'Buku Saku Modul {N} - {SUB}')
         canvas.setFillColor(FAINT)
         canvas.drawCentredString(PAGE_W / 2, 9 * mm, f'{doc.page}')
         canvas.setFont(F, 7.5)
@@ -190,7 +204,7 @@ def heading(text, style, level):
 doc = Doc(OUT, pagesize=A4,
           leftMargin=MARGIN, rightMargin=MARGIN,
           topMargin=18 * mm, bottomMargin=16 * mm,
-          title='Lentera - Buku Saku Modul 0', author='Mohammad Dimas Priambodo')
+          title=f'Lentera - Buku Saku Modul {N}', author='Mohammad Dimas Priambodo')
 frame = Frame(MARGIN, 16 * mm, CONTENT_W, PAGE_H - 18 * mm - 16 * mm, id='f')
 doc.addPageTemplates([PageTemplate(id='p', frames=[frame], onPage=on_page)])
 
@@ -203,9 +217,9 @@ lw = 52 * mm
 story.append(Image(f'{BASE}/png/lamp.png', width=lw, height=lw * lamp[1] / lamp[0]))
 story.append(Spacer(1, 8 * mm))
 story.append(Paragraph('LENTERA', st('cv1', fontName=FB, fontSize=40, leading=44, alignment=TA_CENTER, textColor=INK)))
-story.append(Paragraph('Buku Saku Modul 0 - Dasar Komputer', st('cv2', fontName=FB, fontSize=15, leading=20, alignment=TA_CENTER, textColor=FLAME_DEEP)))
+story.append(Paragraph(f'Buku Saku Modul {N} - {SUB}', st('cv2', fontName=FB, fontSize=15, leading=20, alignment=TA_CENTER, textColor=FLAME_DEEP)))
 story.append(Spacer(1, 5 * mm))
-story.append(Paragraph(tx('Dari menyalakan laptop sampai mengetik 10 jari - ditulis sederhana untuk kamu yang baru mulai.'),
+story.append(Paragraph(tx(TAG),
                        st('cv3', fontSize=11, leading=16, alignment=TA_CENTER, textColor=SOFT)))
 story.append(Spacer(1, 42 * mm))
 story.append(Paragraph('created by', st('cv4', fontSize=9.5, alignment=TA_CENTER, textColor=FAINT, spaceAfter=1)))
@@ -290,11 +304,14 @@ for bab in M['bab']:
 story.append(PageBreak())
 story.append(heading('Setelah membaca buku ini', S['h1'], 0))
 story.append(Paragraph(tx('Buku hanya separuh perjalanan. Separuh lainnya ada di aplikasi Lentera:'), S['body']))
-story.extend(list_block([
-    'Latihan mengetik 10 jari - 3 level dengan papan ketik penunjuk yang menyala.',
-    'Kuis interaktif tiap bab - jawaban salah langsung dijelaskan.',
-    'Ujian akhir Modul 0 - ' + str(len(M['final']['questions'])) + ' soal, nilai lulus ' + str(M['final']['pass']) + '. Lulus ujian ini berarti kamu resmi siap lanjut ke Modul Word.',
-], numbered=False))
+butir = []
+if N == '0':
+    butir.append('Latihan mengetik 10 jari - 3 level dengan papan ketik penunjuk yang menyala.')
+butir.append('Kuis interaktif tiap bab - jawaban salah langsung dijelaskan.')
+if M.get('praktik'):
+    butir.append('Ujian praktek - kerjakan tugas sungguhan di aplikasinya, unggah file .' + M['praktik']['ext'][0] + ', dinilai otomatis per rubrik dengan saran perbaikan.')
+butir.append('Ujian akhir Modul ' + N + ' - ' + str(len(M['final']['questions'])) + ' soal, nilai lulus ' + str(M['final']['pass']) + '. ' + NEXT)
+story.extend(list_block(butir, numbered=False))
 story.extend(box('Coba sekarang', 'Buka aplikasi Lentera di laptop, masuk dengan akunmu, lalu selesaikan bab demi bab. '
                  'Gunakan jurus belah layar (Win + Panah) supaya bisa membaca sambil praktik.', FLAME_SOFT, HexColor('#f5d9bb'), FLAME_DEEP))
 

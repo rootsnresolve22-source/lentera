@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Login from './Login'
 import Dashboard from './Dashboard'
+import Certificate from './Certificate'
 import ModulePage from './ModulePage'
 import LessonView from './LessonView'
 import TypingDrill from './TypingDrill'
@@ -202,6 +203,18 @@ export default function App() {
     )
   }
 
+  if (view.name === 'sertifikat') {
+    return (
+      <Certificate
+        user={state.user}
+        progress={state.progress}
+        activity={state.activity}
+        track={track}
+        onBack={() => go('dashboard')}
+      />
+    )
+  }
+
   if (view.name === 'hotkeys') {
     return (
       <div className="shell">
@@ -239,6 +252,7 @@ export default function App() {
       onLogout={handleLogout}
       onOpenModule={(id) => go('module', { moduleId: id ?? 'm0' })}
       onOpenHotkeys={() => go('hotkeys')}
+      onOpenCertificate={() => go('sertifikat')}
       onOpenAdmin={isAdmin ? () => go('admin') : null}
     />
   )

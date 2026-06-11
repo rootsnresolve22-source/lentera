@@ -21,7 +21,7 @@ export const MODULES = [
     module: MODUL1,
     items: M1_ITEMS,
     hasDrill: false,
-    hasPdf: false,
+    hasPdf: true,
     gate: {
       finalItem: 'm0.final',
       label: 'Lulus ujian Modul 0 dulu',
@@ -33,7 +33,7 @@ export const MODULES = [
     module: MODUL2,
     items: M2_ITEMS,
     hasDrill: false,
-    hasPdf: false,
+    hasPdf: true,
     gate: {
       finalItem: 'm1.praktik',
       label: 'Lulus ujian praktek Modul 1 dulu',
@@ -45,7 +45,7 @@ export const MODULES = [
     module: MODUL3,
     items: M3_ITEMS,
     hasDrill: false,
-    hasPdf: false,
+    hasPdf: true,
     gate: {
       finalItem: 'm2.praktik',
       label: 'Lulus ujian praktek Modul 2 dulu',
@@ -57,7 +57,7 @@ export const MODULES = [
     module: MODUL4,
     items: M4_ITEMS,
     hasDrill: false,
-    hasPdf: false,
+    hasPdf: true,
     gate: {
       finalItem: 'm3.praktik',
       label: 'Lulus ujian praktek Modul 3 dulu',

@@ -33,10 +33,10 @@ export default function ModulePage({ entry, progressMap, track = 'pemula', onOpe
       {hasPdf && (
         <div className="pdf-card">
           <div>
-            <strong>Buku saku PDF Modul 0</strong>
-            <span>31 halaman, materi sama persis — enak dibaca di HP atau dicetak.</span>
+            <strong>Buku saku PDF {module.title.split(' — ')[0]}</strong>
+            <span>Materi sama persis — enak dibaca di HP atau dicetak.</span>
           </div>
-          <a className="btn-ghost btn-sm no-print" href="/Lentera-Modul-0.pdf" download>
+          <a className="btn-ghost btn-sm no-print" href={`/Lentera-Modul-${module.id.slice(1)}.pdf`} download>
             Unduh PDF
           </a>
         </div>
