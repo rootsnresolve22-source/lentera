@@ -8,8 +8,8 @@ export default function Certificate({ user, progress, activity, track, onBack })
   const s = hitungIndeks({ progress, activity14: activity, track })
   const nama = user.full_name || user.username
   const tanggal = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })
-  const finals = ['m0', 'm1', 'm2', 'm3', 'm4']
-  const praktiks = ['m1', 'm2', 'm3']
+  const finals = ['m0', 'm1', 'm2', 'm3', 'm4', 'm5']
+  const praktiks = ['m1', 'm2', 'm3', 'm5']
   return (
     <div className="lesson">
       <div className="no-print" style={{ display: 'flex', gap: 10, marginBottom: 14 }}>
@@ -24,17 +24,17 @@ export default function Certificate({ user, progress, activity, track, onBack })
           <p className="cert-sub">diberikan kepada</p>
           <p className="cert-name">{nama}</p>
           <p className="cert-body">
-            yang telah menuntaskan seluruh kurikulum Lentera — Modul 0 sampai Modul 4
+            yang telah menuntaskan seluruh kurikulum Lentera — enam modul (M0–M5)
             ({s.totalLangkah} langkah): ujian teori lima modul serta ujian praktek
-            Word, Excel, dan PowerPoint dengan berkas karya sendiri.
+            Word, Excel, PowerPoint, serta simulasi satu hari kerja penuh dengan berkas karya sendiri.
           </p>
           <div className="cert-grid">
             <div>
-              <span className="cert-k">Ujian teori M0–M4</span>
+              <span className="cert-k">Ujian teori M0–M5</span>
               <span className="cert-v">{finals.map((k) => s.finals[k] ?? '—').join(' · ')}</span>
             </div>
             <div>
-              <span className="cert-k">Ujian praktek M1–M3</span>
+              <span className="cert-k">Ujian praktek M1–M3 & M5</span>
               <span className="cert-v">{praktiks.map((k) => s.praktiks?.[k] ?? '—').join(' · ')}</span>
             </div>
           </div>

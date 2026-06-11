@@ -7,6 +7,7 @@ import { MODUL1, M1_ITEMS } from './modul1'
 import { MODUL2, M2_ITEMS } from './modul2'
 import { MODUL3, M3_ITEMS } from './modul3'
 import { MODUL4, M4_ITEMS } from './modul4'
+import { MODUL5, M5_ITEMS } from './modul5'
 
 export const MODULES = [
   {
@@ -64,6 +65,18 @@ export const MODULES = [
       desc: 'Terbuka setelah ujian praktek PowerPoint (Modul 3) lulus.',
     },
     dashDesc: 'Email, PDF, cetak-pindai, internet sehat — siap kerja penuh.',
+  },
+  {
+    module: MODUL5,
+    items: M5_ITEMS,
+    hasDrill: false,
+    hasPdf: true,
+    gate: {
+      finalItem: 'm4.final',
+      label: 'Lulus ujian Modul 4 dulu',
+      desc: 'Terbuka setelah ujian akhir Modul 4 lulus (nilai 85).',
+    },
+    dashDesc: 'Capstone: jalani satu hari kerja penuh — mail merge & VLOOKUP termasuk.',
   },
 ]
 

@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **1.3.0 · Kelola & Kawal — Akun Peserta, Ujian Terkunci**
+- Versi: **2.0.0 · Graduate — Simulasi Satu Hari Kerja**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -26,7 +26,7 @@ created by **Mohammad Dimas Priambodo**
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v1.3.0 · Kelola & Kawal — Akun Peserta, Ujian Terkunci**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v2.0.0 · Graduate — Simulasi Satu Hari Kerja**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
@@ -63,3 +63,8 @@ Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa
 ## Baru di v1.3.0 — Kelola & Kawal
 - **Kelola akun dari Panel Admin** (backend baru `belajar-admin`, fungsi inti tak tersentuh): form "Tambah peserta baru" (nama + username + PIN 4–6 digit, langsung aktif), tombol **Reset PIN** dan **Nonaktifkan/Aktifkan akun** di rapot tiap peserta. PIN di-hash bcrypt seperti sistem login lama; admin tidak bisa menonaktifkan dirinya sendiri.
 - **Mode ujian terkunci**: ujian teori berjalan satu layar penuh (fullscreen); pindah jendela/tab atau keluar dari layar penuh tercatat dan ditampilkan peringatan. Jumlah "keluar layar" tampil di rapot admin pada baris ujian — mengawal kejujuran tanpa menghukum otomatis. Ujian praktek sengaja TIDAK dikunci (peserta memang harus membuka Word/Excel/PowerPoint).
+
+## Baru di v2.0.0 — Graduate (Fase D inti)
+- **Modul 5 — Simulasi Satu Hari Kerja** (7 langkah, gerbang: lulus ujian M4): capstone berbentuk skenario pagi-sampai-sore sebagai staf admin — memilah email & phishing, **Mail Merge** (surat massal dari daftar Excel), **VLOOKUP & IF** (rekap dari daftar induk), slide laporan & ritme kerja, lalu pengiriman + arsip. 20 kuis situasional, ujian teori 15 soal, ujian praktek unggah **Laporan Harian (.docx, 6 rubrik)**. Buku saku PDF M5 (16+ hal) tersedia.
+- Sertifikat, rapot, kolom panel, dan ekspor Excel kini mencakup enam modul (M0–M5). Peta jenjang di beranda ditandai tuntas.
+- Bagian Fase D lain (multi-organisasi, jalur adaptif) sengaja menunggu kebutuhan nyata angkatan pertama — sesuai rancangan.

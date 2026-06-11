@@ -7,7 +7,7 @@ import { jalurLabel } from './score'
 
 // Tahapan yang belum dibangun — sekadar peta jalan di beranda.
 const LOCKED_STEPS = [
-  { no: '★', title: 'Jenjang menengah & mahir', desc: 'Mail merge, VLOOKUP, simulasi satu hari kerja — dibuka setelah peluncuran.' },
+  { no: '✓', title: 'Kurikulum lengkap M0–M5', desc: 'Semua jenjang telah tersedia. Pengembangan berikutnya menyesuaikan kebutuhan angkatan kedua.' },
 ]
 
 // Pesan motivasi kontekstual — sederhana, hangat, tidak menghakimi.

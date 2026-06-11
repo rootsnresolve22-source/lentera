@@ -89,6 +89,11 @@ export const CHECKS = {
   'ada-list': (d) => d.paras.some((p) => p.list && p.text),
   'gaya-tambahan': (d) => d.paras.some((p) => (p.ital || p.under) && p.text),
   'kata-40': (d) => d.words >= 40,
+  // Modul 5 — Laporan harian simulasi (Word)
+  'judul-laporan': (d) => d.paras.some((p) => /laporan/i.test(p.text)),
+  'laporan-bold': (d) => d.paras.some((p) => /laporan/i.test(p.text) && p.bold),
+  'laporan-center': (d) => d.paras.some((p) => /laporan/i.test(p.text) && p.center),
+  'kata-60': (d) => d.words >= 60,
   // Modul 2 — Excel
   'xlsx-valid': (d) => d.cellCount > 0,
   'header-3': (d) => d.row1Texts.length >= 3,
@@ -112,6 +117,10 @@ const SARAN = {
   'ada-list': 'Pakai tombol Numbering/Bullets di grup Paragraph — bukan angka ketikan manual.',
   'gaya-tambahan': 'Pilih satu kata lalu tekan Ctrl + I (miring) atau Ctrl + U (garis bawah).',
   'kata-40': 'Tambah isi suratmu — sebutkan alasan izin dan tanggalnya.',
+  'judul-laporan': 'Tulis judul yang memuat kata "LAPORAN" di baris atas dokumen.',
+  'laporan-bold': 'Pilih (blok) baris judul laporan, lalu tekan Ctrl + B.',
+  'laporan-center': 'Klik di baris judul laporan lalu tekan Ctrl + E.',
+  'kata-60': 'Lengkapi isi laporanmu — pembuka, daftar pekerjaan, dan catatan penutup (minimal 60 kata).',
   'xlsx-valid': 'Simpan ulang dari Excel sebagai Excel Workbook (*.xlsx), lalu unggah file itu.',
   'header-3': 'Isi baris 1 dengan judul kolom — minimal 3, misalnya Barang, Harga, Jumlah.',
   'baris-5': 'Tambah barisan datamu sampai minimal 5 baris di bawah judul kolom.',

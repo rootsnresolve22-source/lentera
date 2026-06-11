@@ -189,14 +189,14 @@ function Rapor({ d, generatedAt, onBack, onResetPin, onToggleAktif }) {
 
 function unduhExcel(rows) {
   const head = ['Nama', 'Username', 'Jalur', 'Langkah', 'Total langkah',
-    'Ujian M0', 'Ujian M1', 'Ujian M2', 'Ujian M3', 'Ujian M4',
-    'Praktek M1', 'Praktek M2', 'Praktek M3', 'Level ketik',
+    'Ujian M0', 'Ujian M1', 'Ujian M2', 'Ujian M3', 'Ujian M4', 'Ujian M5',
+    'Praktek M1', 'Praktek M2', 'Praktek M3', 'Praktek M5', 'Level ketik',
     'P', 'T', 'C', 'K', 'Indeks', 'Predikat']
   const lines = rows.map((p) => [
     p.user.full_name, p.user.username, jalurLabel(p.track),
     p.skor.langkahSelesai, p.skor.totalLangkah,
-    ...['m0', 'm1', 'm2', 'm3', 'm4'].map((k) => p.skor.finals[k] ?? ''),
-    ...['m1', 'm2', 'm3'].map((k) => p.skor.praktiks?.[k] ?? ''),
+    ...['m0', 'm1', 'm2', 'm3', 'm4', 'm5'].map((k) => p.skor.finals[k] ?? ''),
+    ...['m1', 'm2', 'm3', 'm5'].map((k) => p.skor.praktiks?.[k] ?? ''),
     p.skor.drillLevel ?? '', p.skor.P, p.skor.T, p.skor.C, p.skor.K,
     p.skor.indeks, p.skor.predikat,
   ])
@@ -317,7 +317,7 @@ export default function AdminPanel({ token, onBack }) {
             <table className="admin-tab">
               <thead>
                 <tr>
-                  <th>Peserta</th><th>Jalur</th><th>Langkah</th><th>Ujian M0–M4</th><th>Ketik</th>
+                  <th>Peserta</th><th>Jalur</th><th>Langkah</th><th>Ujian M0–M5</th><th>Ketik</th>
                   <th>Indeks</th><th>Hadir 14h</th><th>Masuk 30h</th><th>Terakhir aktif</th>
                 </tr>
               </thead>
@@ -327,7 +327,7 @@ export default function AdminPanel({ token, onBack }) {
                     <td><strong>{p.user.full_name}</strong><br /><span className="admin-sub">{p.user.username}</span></td>
                     <td>{jalurLabel(p.track)}</td>
                     <td>{p.skor.langkahSelesai}/{p.skor.totalLangkah}</td>
-                    <td>{['m0', 'm1', 'm2', 'm3', 'm4'].map((k) => p.skor.finals[k] ?? '—').join(' / ')}</td>
+                    <td>{['m0', 'm1', 'm2', 'm3', 'm4', 'm5'].map((k) => p.skor.finals[k] ?? '—').join(' / ')}</td>
                     <td>{p.skor.drillLevel ? 'L' + p.skor.drillLevel : '—'}</td>
                     <td><strong>{p.skor.indeks}</strong> <span className="admin-sub">{p.skor.predikat}</span></td>
                     <td>{p.activity14.daysActive} hr · {fmtMenit(p.activity14.minutes)}</td>
