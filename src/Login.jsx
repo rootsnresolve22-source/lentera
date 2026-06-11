@@ -94,7 +94,7 @@ export default function Login({ onLogin }) {
         </form>
 
         <p className="login-foot">
-          Belum punya akun? Akun dibuatkan oleh pendamping program di kampungmu.
+          Belum punya akun? Akun dibuatkan oleh pendamping program.
         </p>
       </div>
     </div>
