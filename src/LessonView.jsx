@@ -104,7 +104,7 @@ export default function LessonView({ bab, nextBab, alreadyDone, onComplete, onBa
     if (!alreadyDone) {
       const ok = await onComplete(bab.id, {
         seconds: stats.seconds,
-        meta: { wrong: stats.wrong, qcount: bab.quiz.length },
+        meta: { wrong: stats.wrong, wrongIdx: stats.wrongIdx, qcount: bab.quiz.length },
       })
       setSaveWarn(!ok)
     }

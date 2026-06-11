@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import Login from './Login'
 import Dashboard from './Dashboard'
 import Certificate from './Certificate'
+import SmartReview from './SmartReview'
 import ModulePage from './ModulePage'
 import LessonView from './LessonView'
 import TypingDrill from './TypingDrill'
@@ -144,6 +145,7 @@ export default function App() {
           onOpenDrill={() => go('drill')}
           onOpenFinal={() => go('final', { moduleId: entry.module.id })}
           onOpenPraktik={() => go('praktik', { moduleId: entry.module.id })}
+          onOpenReview={() => go('review', { moduleId: entry.module.id })}
           onBack={() => go('dashboard')}
         />
       </div>
@@ -215,6 +217,22 @@ export default function App() {
     )
   }
 
+  if (view.name === 'review') {
+    const entry = getEntry(view.moduleId ?? 'm0')
+    return (
+      <div className="shell">
+        <SmartReview
+          entry={entry}
+          progressMap={progressMap}
+          onSave={(cleared) =>
+            saveProgress(entry.module.id + '.review', 'selesai', null, { meta: { cleared } })
+          }
+          onBack={() => go('module', { moduleId: entry.module.id })}
+        />
+      </div>
+    )
+  }
+
   if (view.name === 'hotkeys') {
     return (
       <div className="shell">
@@ -231,10 +249,10 @@ export default function App() {
         <FinalTest
           test={entry.module.final}
           bestScore={progressMap[finalId]?.score ?? null}
-          onFinish={(score, passed, seconds) =>
+          onFinish={(score, passed, seconds, wrongIdx) =>
             saveProgress(finalId, passed ? 'selesai' : 'sedang', score, {
               seconds,
-              meta: { lastScore: score },
+              meta: { lastScore: score, wrongIdx, qcount: entry.module.final.questions.length },
             })
           }
           onBack={() => go('module', { moduleId: entry.module.id })}

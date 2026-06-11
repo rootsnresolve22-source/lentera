@@ -52,7 +52,11 @@ export default function FinalTest({ test, bestScore, onFinish, onBack }) {
     const score = Math.round((right / items.length) * 100)
     const passed = score >= test.pass
     const seconds = Math.round((Date.now() - startAt) / 1000)
-    const saved = await onFinish(score, passed, seconds)
+    const wrongIdx = newAnswers
+      .filter((a) => !a.correct)
+      .map((a) => test.questions.indexOf(a.q))
+      .filter((i) => i >= 0)
+    const saved = await onFinish(score, passed, seconds, wrongIdx)
     setAnswers(newAnswers)
     setResult({ score, right, passed, saved })
     setScreen('hasil')

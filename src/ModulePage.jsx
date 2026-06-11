@@ -1,6 +1,7 @@
 import { itemDone, moduleDoneCount } from './content'
+import { daftarReview } from './SmartReview'
 
-export default function ModulePage({ entry, progressMap, track = 'pemula', onOpenBab, onOpenDrill, onOpenFinal, onOpenPraktik, onBack }) {
+export default function ModulePage({ entry, progressMap, track = 'pemula', onOpenBab, onOpenDrill, onOpenFinal, onOpenPraktik, onOpenReview, onBack }) {
   const { module, items, hasDrill, hasPdf } = entry
   const cepat = track === 'cepat' && module.id === 'm0'
 
@@ -41,6 +42,16 @@ export default function ModulePage({ entry, progressMap, track = 'pemula', onOpe
           </a>
         </div>
       )}
+      {daftarReview(entry, progressMap).length > 0 && (
+        <div className="pdf-card">
+          <div>
+            <strong>Ulangan Pintar — {daftarReview(entry, progressMap).length} soal</strong>
+            <span>Soal yang pernah kamu jawab salah. Kuasai sampai daftarnya kosong.</span>
+          </div>
+          <button className="btn-ghost btn-sm no-print" onClick={onOpenReview}>Mulai ulangan</button>
+        </div>
+      )}
+
 
       {cepat && (
         <div className="blk-box blk-tip">

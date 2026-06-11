@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { unduhRekapXlsx } from './xlsxExport'
 import Lamp from './Lamp'
 import * as api from './api'
 import { MODULES, moduleUnlocked } from './content'
@@ -184,8 +185,7 @@ function Rapor({ d, generatedAt, onBack }) {
 /* ================= PANEL UTAMA ================= */
 
 
-function unduhCsv(rows) {
-  const esc = (x) => `"${String(x ?? '').replace(/"/g, '""')}"`
+function unduhExcel(rows) {
   const head = ['Nama', 'Username', 'Jalur', 'Langkah', 'Total langkah',
     'Ujian M0', 'Ujian M1', 'Ujian M2', 'Ujian M3', 'Ujian M4',
     'Praktek M1', 'Praktek M2', 'Praktek M3', 'Level ketik',
@@ -197,15 +197,35 @@ function unduhCsv(rows) {
     ...['m1', 'm2', 'm3'].map((k) => p.skor.praktiks?.[k] ?? ''),
     p.skor.drillLevel ?? '', p.skor.P, p.skor.T, p.skor.C, p.skor.K,
     p.skor.indeks, p.skor.predikat,
-  ].map(esc).join(';'))
-  const csv = '\uFEFF' + head.map(esc).join(';') + '\n' + lines.join('\n')
-  const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }))
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `lentera-rekap-${new Date().toISOString().slice(0, 10)}.csv`
-  a.click()
-  URL.revokeObjectURL(url)
+  ])
+  unduhRekapXlsx(head, lines, `lentera-rekap-${new Date().toISOString().slice(0, 10)}.xlsx`)
 }
+
+function soalTersulit(rows) {
+  const count = {}
+  for (const p of rows) {
+    const prog = Object.fromEntries((p.progress ?? []).map((r) => [r.item_id, r]))
+    for (const e of MODULES) {
+      for (const bab of e.module.bab) {
+        for (const i of prog[bab.id]?.meta?.wrongIdx ?? []) {
+          if (!bab.quiz[i]) continue
+          const k = bab.id + '#' + i
+          count[k] = count[k] || { n: 0, q: bab.quiz[i].q, letak: `Bab ${bab.no} · ${e.module.title.split(' — ')[0]}` }
+          count[k].n++
+        }
+      }
+      const f = e.module.final
+      for (const i of prog[f.id]?.meta?.wrongIdx ?? []) {
+        if (!f.questions[i]) continue
+        const k = f.id + '#' + i
+        count[k] = count[k] || { n: 0, q: f.questions[i].q, letak: `Ujian · ${e.module.title.split(' — ')[0]}` }
+        count[k].n++
+      }
+    }
+  }
+  return Object.values(count).sort((a, b) => b.n - a.n).slice(0, 12)
+}
+
 
 export default function AdminPanel({ token, onBack }) {
   const [data, setData] = useState(null)
@@ -238,7 +258,7 @@ export default function AdminPanel({ token, onBack }) {
         <p className="lesson-eyebrow">Panel Admin</p>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
         <h1 className="lesson-title">Pemantauan peserta</h1>
-          <button className="btn-ghost btn-sm no-print" onClick={() => unduhCsv(rows)}>Unduh rekap (Excel/CSV)</button>
+          <button className="btn-ghost btn-sm no-print" onClick={() => unduhExcel(rows)}>Unduh rekap (Excel)</button>
         </div>
         <p className="lesson-desc">
           Indeks Lentera = Penguasaan 50% + Ketelitian 20% + Kecepatan 15% + Kerajinan 15%.
@@ -275,6 +295,25 @@ export default function AdminPanel({ token, onBack }) {
                 )}
               </tbody>
             </table>
+            <h2 className="blk-h" style={{ marginTop: 28 }}>Soal tersulit (bahan revisi materi)</h2>
+            <p className="lesson-desc">Dihitung dari soal yang pernah dijawab salah peserta — kuis bab dan ujian teori, lintas semua peserta.</p>
+            {soalTersulit(rows).length === 0 ? (
+              <p className="lesson-desc">Belum ada data kesalahan terkumpul.</p>
+            ) : (
+              <table className="rapor-tab">
+                <thead><tr><th>Soal</th><th>Letak</th><th>Salah</th></tr></thead>
+                <tbody>
+                  {soalTersulit(rows).map((t, i) => (
+                    <tr key={i}>
+                      <td>{t.q.length > 90 ? t.q.slice(0, 90) + '…' : t.q}</td>
+                      <td>{t.letak}</td>
+                      <td>{t.n} peserta</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+
           </div>
         )}
       </div>

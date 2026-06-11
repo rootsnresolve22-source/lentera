@@ -8,6 +8,7 @@ export default function Quiz({ questions, onFinish }) {
   const [feedback, setFeedback] = useState(null) // { ok, text }
   const [solved, setSolved] = useState(false)
   const [wrong, setWrong] = useState(0)
+  const [wrongIdx, setWrongIdx] = useState(() => new Set())
   const [startAt] = useState(() => Date.now())
   const [shake, setShake] = useState({ i: -1, t: 0 })
 
@@ -21,6 +22,7 @@ export default function Quiz({ questions, onFinish }) {
       setFeedback({ ok: true, text: q.explain || 'Benar!' })
     } else {
       setWrong(wrong + 1)
+      setWrongIdx((w) => new Set(w).add(idx))
       setShake({ i, t: Date.now() })
       const msg = (q.wrong && q.wrong[i]) || 'Belum tepat. Coba lagi — perhatikan baik-baik.'
       setFeedback({ ok: false, text: msg })
@@ -34,6 +36,7 @@ export default function Quiz({ questions, onFinish }) {
       setFeedback({ ok: true, text: q.explain || 'Benar!' })
     } else {
       setWrong(wrong + 1)
+      setWrongIdx((w) => new Set(w).add(idx))
       setShake({ i: -2, t: Date.now() })
       const msg = (q.wrong && q.wrong[partId]) || 'Belum tepat. Coba klik bagian yang lain.'
       setFeedback({ ok: false, text: msg })
@@ -42,7 +45,7 @@ export default function Quiz({ questions, onFinish }) {
 
   function next() {
     if (last) {
-      onFinish({ wrong, seconds: Math.round((Date.now() - startAt) / 1000) })
+      onFinish({ wrong, wrongIdx: [...wrongIdx], seconds: Math.round((Date.now() - startAt) / 1000) })
       return
     }
     setIdx(idx + 1)
