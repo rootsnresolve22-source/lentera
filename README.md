@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **2.1.0 · Bonus — Bekerja Cerdas dengan AI**
+- Versi: **2.2.0 · P3K — Pertolongan Pertama Pada Komputer**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -26,7 +26,7 @@ created by **Mohammad Dimas Priambodo**
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v2.1.0 · Bonus — Bekerja Cerdas dengan AI**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v2.2.0 · P3K — Pertolongan Pertama Pada Komputer**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
@@ -72,3 +72,7 @@ Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa
 ## Baru di v2.1.0 — Modul Bonus: Bekerja Cerdas dengan AI
 - **Modul Bonus (ChatGPT & Gemini)** — terbuka untuk SIAPA SAJA sejak hari pertama, level apa pun, tanpa gerbang: 5 bab (kenalan & watak AI, resep prompt **PINTA**, AI di meja kerja, AI sebagai guru pribadi, etika & keamanan), 20 kuis, ujian akhir 15 soal (lulus 80), buku saku PDF 15 halaman.
 - Bonus **tidak mempengaruhi** Indeks Lentera, jumlah langkah inti, maupun syarat Sertifikat — murni nilai tambah; namun nilainya tetap tampil di rapot per peserta, dan ikut sistem Ulangan Pintar serta analitik Soal Tersulit.
+
+## Baru di v2.2.0 — P3K: Pertolongan Pertama Pada Komputer
+- Halaman Kamus kini bertab dua: **Kamus Pintasan** (seperti sebelumnya) dan **P3K — Masalah Umum**: 48 masalah yang paling sering bikin panik beserta jurus cepatnya, proporsi rata 12 Komputer Umum · 12 Word · 12 Excel · 12 PowerPoint (hang & Task Manager, file terhapus, Insert menimpa ketikan, #####, #N/A, SUM=0, Shift+F5, layar penonton hitam, dst.).
+- Satu kotak pencarian melayani kedua tab ("hang", "#N/A", "terpotong" langsung ketemu), tetap bisa dicetak, dan terbuka untuk semua peserta di level mana pun. Tombol beranda menjadi "Kamus & P3K".

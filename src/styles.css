@@ -1215,3 +1215,9 @@ kbd {
 /* ===== Kelola akun (panel admin) ===== */
 .inp { padding: 9px 12px; border: 1.5px solid #c8d0d6; border-radius: 9px; font: inherit; min-width: 160px; background: #fff; }
 .inp:focus { outline: none; border-color: #e8740c; }
+
+/* ===== Tab Kamus & P3K ===== */
+.hk-tabs { display: flex; gap: 8px; margin: 4px 0 12px; }
+.hk-tab { padding: 8px 16px; border: 1.5px solid #c8d0d6; border-radius: 999px; background: #fff; font: inherit; font-size: 14px; color: #5c6b76; cursor: pointer; }
+.hk-tab-on { background: #fdeedd; border-color: #e8740c; color: #b85608; font-weight: 700; }
+.hk-chip { display: inline-block; padding: 4px 10px; border-radius: 8px; background: #f1f4f6; border: 1px solid #c8d0d6; color: #1f2a33; font-size: 12.5px; font-weight: 700; line-height: 1.25; }

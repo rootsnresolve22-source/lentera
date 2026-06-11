@@ -56,7 +56,7 @@ export default function Dashboard({ user, progressMap, activity, track, onLogout
           {onOpenAdmin && (
             <button className="btn-primary btn-sm" onClick={onOpenAdmin}>Panel Admin</button>
           )}
-          <button className="btn-ghost" onClick={onOpenHotkeys}>Kamus Pintasan</button>
+          <button className="btn-ghost" onClick={onOpenHotkeys}>Kamus & P3K</button>
           {allComplete && (
             <button className="btn-primary" onClick={onOpenCertificate}>Sertifikat Kelulusan</button>
           )}
