@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **2.0.0 · Graduate — Simulasi Satu Hari Kerja**
+- Versi: **2.1.0 · Bonus — Bekerja Cerdas dengan AI**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -26,7 +26,7 @@ created by **Mohammad Dimas Priambodo**
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v2.0.0 · Graduate — Simulasi Satu Hari Kerja**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v2.1.0 · Bonus — Bekerja Cerdas dengan AI**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
@@ -68,3 +68,7 @@ Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa
 - **Modul 5 — Simulasi Satu Hari Kerja** (7 langkah, gerbang: lulus ujian M4): capstone berbentuk skenario pagi-sampai-sore sebagai staf admin — memilah email & phishing, **Mail Merge** (surat massal dari daftar Excel), **VLOOKUP & IF** (rekap dari daftar induk), slide laporan & ritme kerja, lalu pengiriman + arsip. 20 kuis situasional, ujian teori 15 soal, ujian praktek unggah **Laporan Harian (.docx, 6 rubrik)**. Buku saku PDF M5 (16+ hal) tersedia.
 - Sertifikat, rapot, kolom panel, dan ekspor Excel kini mencakup enam modul (M0–M5). Peta jenjang di beranda ditandai tuntas.
 - Bagian Fase D lain (multi-organisasi, jalur adaptif) sengaja menunggu kebutuhan nyata angkatan pertama — sesuai rancangan.
+
+## Baru di v2.1.0 — Modul Bonus: Bekerja Cerdas dengan AI
+- **Modul Bonus (ChatGPT & Gemini)** — terbuka untuk SIAPA SAJA sejak hari pertama, level apa pun, tanpa gerbang: 5 bab (kenalan & watak AI, resep prompt **PINTA**, AI di meja kerja, AI sebagai guru pribadi, etika & keamanan), 20 kuis, ujian akhir 15 soal (lulus 80), buku saku PDF 15 halaman.
+- Bonus **tidak mempengaruhi** Indeks Lentera, jumlah langkah inti, maupun syarat Sertifikat — murni nilai tambah; namun nilainya tetap tampil di rapot per peserta, dan ikut sistem Ulangan Pintar serta analitik Soal Tersulit.

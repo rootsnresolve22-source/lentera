@@ -31,7 +31,7 @@ export default function Dashboard({ user, progressMap, activity, track, onLogout
   const total = aktif.items.length
   const pct = Math.round((done / total) * 100)
   const started = done > 0
-  const allComplete = MODULES.every((e) => moduleComplete(progressMap, e))
+  const allComplete = MODULES.filter((e) => !e.bonus).every((e) => moduleComplete(progressMap, e))
   const namaAktif = aktif.module.title.split(' — ')[0]
   const finalAktif = progressMap[aktif.module.final.id]?.score ?? null
   const finalM0 = progressMap['m0.final']?.score ?? null

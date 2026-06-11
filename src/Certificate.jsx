@@ -48,7 +48,7 @@ export default function Certificate({ user, progress, activity, track, onBack })
             </div>
           </div>
           <p className="cert-note">
-            Modul: {MODULES.map((e) => e.module.title.split(' — ')[0]).join(' · ')} — dinilai otomatis dan transparan oleh aplikasi Lentera.
+            Modul: {MODULES.filter((e) => !e.bonus).map((e) => e.module.title.split(' — ')[0]).join(' · ')} — dinilai otomatis dan transparan oleh aplikasi Lentera.
           </p>
         </div>
       </div>

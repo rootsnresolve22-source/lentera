@@ -39,7 +39,7 @@ function bestDrillAcc(meta) {
 
 export function hitungIndeks({ progress, activity14, track }) {
   const map = Object.fromEntries((progress || []).map((p) => [p.item_id, p]))
-  const open = MODULES.filter((e) => moduleUnlocked(map, e))
+  const open = MODULES.filter((e) => !e.bonus && moduleUnlocked(map, e)) // modul bonus tidak mempengaruhi Indeks
 
   // Nilai ujian per modul (semua modul, untuk tabel admin; null bila belum diuji)
   const finals = {}

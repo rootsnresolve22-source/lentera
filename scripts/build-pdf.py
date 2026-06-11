@@ -17,19 +17,21 @@ from reportlab.platypus.tableofcontents import TableOfContents
 
 MOD = os.environ.get('MOD', 'm0')
 N = MOD[1:]
-SUB = {'0': 'Dasar Komputer', '1': 'Word Dasar', '2': 'Excel Dasar', '3': 'PowerPoint Dasar', '4': 'Pelengkap Kerja', '5': 'Simulasi Satu Hari Kerja'}[N]
+SUB = {'0': 'Dasar Komputer', '1': 'Word Dasar', '2': 'Excel Dasar', '3': 'PowerPoint Dasar', '4': 'Pelengkap Kerja', '5': 'Simulasi Satu Hari Kerja', 'b': 'Bonus: Bekerja Cerdas dengan AI'}[N]
 TAG = {'0': 'Dari menyalakan laptop sampai mengetik 10 jari - ditulis sederhana untuk kamu yang baru mulai.',
        '1': 'Dari kertas kosong sampai surat resmi yang rapi - Word untuk pekerjaan sehari-hari.',
        '2': 'Dari kotak-kotak sel sampai rumus yang menghitung sendiri - Excel tanpa takut angka.',
        '3': 'Dari slide pertama sampai tampil percaya diri - PowerPoint untuk presentasi kerja.',
        '4': 'Email, PDF, cetak-pindai, dan internet sehat - bekal terakhir sebelum terjun bekerja.',
-       '5': 'Gladi bersih jadi staf: mail merge, VLOOKUP, dan satu hari kerja penuh dari pagi sampai sore.'}[N]
+       '5': 'Gladi bersih jadi staf: mail merge, VLOOKUP, dan satu hari kerja penuh dari pagi sampai sore.',
+       'b': 'Terbuka untuk siapa saja: ChatGPT & Gemini - jurus prompt, kerja kantor, guru pribadi, dan etika.'}[N]
 NEXT = {'0': 'Lulus ujian ini berarti kamu resmi siap lanjut ke Modul Word.',
         '1': 'Lulus berarti gerbang Modul Excel terbuka.',
         '2': 'Lulus berarti gerbang Modul PowerPoint terbuka.',
         '3': 'Lulus berarti gerbang Modul Pelengkap terbuka.',
         '4': 'Lulus berarti gerbang Modul Simulasi terbuka.',
-        '5': 'Lulus berarti seluruh kurikulum Lentera tuntas - saatnya sertifikat.'}[N]
+        '5': 'Lulus berarti seluruh kurikulum Lentera tuntas - saatnya sertifikat.',
+        'b': 'Modul bonus tuntas - bawalah jurus AI ini ke modul mana pun dan ke tempat kerjamu.'}[N]
 BASE = f'/tmp/lentera-pdf-{MOD}'
 OUT = f'{BASE}/Lentera-Modul-{N}.pdf'
 M = json.load(open(f'{BASE}/content.json'))

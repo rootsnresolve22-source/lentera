@@ -8,6 +8,7 @@ import { MODUL2, M2_ITEMS } from './modul2'
 import { MODUL3, M3_ITEMS } from './modul3'
 import { MODUL4, M4_ITEMS } from './modul4'
 import { MODUL5, M5_ITEMS } from './modul5'
+import { MODULBONUS, MB_ITEMS } from './modulBonus'
 
 export const MODULES = [
   {
@@ -77,6 +78,15 @@ export const MODULES = [
       desc: 'Terbuka setelah ujian akhir Modul 4 lulus (nilai 85).',
     },
     dashDesc: 'Capstone: jalani satu hari kerja penuh — mail merge & VLOOKUP termasuk.',
+  },
+  {
+    module: MODULBONUS,
+    items: MB_ITEMS,
+    hasDrill: false,
+    hasPdf: true,
+    gate: null,
+    bonus: true,
+    dashDesc: 'Terbuka untuk semua sejak hari pertama: ChatGPT & Gemini — prompt, kerja, belajar, etika.',
   },
 ]
 

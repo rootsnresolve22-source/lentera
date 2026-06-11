@@ -10,9 +10,10 @@ import { MODUL2 } from '../src/content/modul2'
 import { MODUL3 } from '../src/content/modul3'
 import { MODUL4 } from '../src/content/modul4'
 import { MODUL5 } from '../src/content/modul5'
+import { MODULBONUS } from '../src/content/modulBonus'
 
 const MOD = process.env.MOD || 'm0'
-const M = { m0: MODUL0, m1: MODUL1, m2: MODUL2, m3: MODUL3, m4: MODUL4, m5: MODUL5 }[MOD]
+const M = { m0: MODUL0, m1: MODUL1, m2: MODUL2, m3: MODUL3, m4: MODUL4, m5: MODUL5, mb: MODULBONUS }[MOD]
 const OUT = `/tmp/lentera-pdf-${MOD}`
 mkdirSync(OUT + '/diagrams', { recursive: true })
 
