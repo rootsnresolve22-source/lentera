@@ -21,7 +21,7 @@ function olah(p) {
 
 /* ================= RAPOT (siap cetak) ================= */
 
-function Rapor({ d, generatedAt, onBack }) {
+function Rapor({ d, generatedAt, onBack, onResetPin, onToggleAktif }) {
   const s = d.skor
   const insights = insightOtomatis(s, d.activity14, d.track, d.placement?.meta?.skipped ? null : d.placement?.score ?? null)
   const sub = [
@@ -34,6 +34,8 @@ function Rapor({ d, generatedAt, onBack }) {
     <div className="lesson">
       <div className="no-print" style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
         <button className="btn-back" onClick={onBack} style={{ margin: 0 }}>← Daftar peserta</button>
+        <button className="btn-ghost btn-sm no-print" onClick={onResetPin}>Reset PIN</button>
+        <button className="btn-ghost btn-sm no-print" onClick={onToggleAktif}>{d.user.active ? 'Nonaktifkan akun' : 'Aktifkan akun'}</button>
         <button className="btn-primary btn-sm" onClick={() => window.print()}>Cetak rapot</button>
       </div>
 
@@ -136,7 +138,7 @@ function Rapor({ d, generatedAt, onBack }) {
                 <tr key={e.module.final.id}>
                   <td>{e.module.final.title} (lulus {e.module.final.pass})</td>
                   <td>{fin == null ? 'Belum' : fin >= e.module.final.pass ? 'LULUS' : 'Belum lulus'}</td>
-                  <td>{fin == null ? '—' : `Nilai terbaik ${fin}`}</td>
+                  <td>{fin == null ? '—' : `Nilai terbaik ${fin}${s.map[e.module.final.id]?.meta?.lockExits ? ` · keluar layar ${s.map[e.module.final.id].meta.lockExits}×` : ''}`}</td>
                   <td>{fmtDetik(s.map[e.module.final.id]?.seconds)}</td>
                   <td>{s.map[e.module.final.id]?.attempts ?? '—'}</td>
                 </tr>
@@ -238,10 +240,43 @@ export default function AdminPanel({ token, onBack }) {
   }
   useEffect(muat, [])
 
+  const [fNama, setFNama] = useState('')
+  const [fUser, setFUser] = useState('')
+  const [fPin, setFPin] = useState('')
+  const [busyAkun, setBusyAkun] = useState(false)
+  const [akunMsg, setAkunMsg] = useState(null)
+
+  async function tambahAkun() {
+    setBusyAkun(true); setAkunMsg(null)
+    try {
+      const r = await api.adminCreateUser(token, { username: fUser, full_name: fNama, pin: fPin })
+      setAkunMsg(`Akun "${r.user.username}" (${r.user.full_name}) berhasil dibuat — PIN sudah aktif.`)
+      setFNama(''); setFUser(''); setFPin('')
+      muat()
+    } catch (e) { setAkunMsg(e.message) } finally { setBusyAkun(false) }
+  }
+  async function resetPin(p) {
+    const pin = window.prompt(`PIN baru untuk ${p.user.full_name} (4–6 digit angka):`)
+    if (pin == null) return
+    try {
+      await api.adminSetPin(token, p.user.id, pin.trim())
+      window.alert(`PIN ${p.user.username} berhasil diganti.`)
+    } catch (e) { window.alert(e.message) }
+  }
+  async function toggleAktif(p) {
+    const aktifkan = !p.user.active
+    if (!window.confirm(`${aktifkan ? 'Aktifkan' : 'Nonaktifkan'} akun ${p.user.full_name}? ${aktifkan ? '' : 'Peserta tidak bisa masuk sampai diaktifkan lagi.'}`)) return
+    try {
+      await api.adminSetActive(token, p.user.id, aktifkan)
+      muat()
+      if (!aktifkan) setSel(null)
+    } catch (e) { window.alert(e.message) }
+  }
+
   if (sel) {
     return (
       <div className="shell shell-wide">
-        <Rapor d={sel} generatedAt={data?.generated_at} onBack={() => setSel(null)} />
+        <Rapor d={sel} generatedAt={data?.generated_at} onBack={() => setSel(null)} onResetPin={() => resetPin(sel)} onToggleAktif={() => toggleAktif(sel)} />
       </div>
     )
   }
@@ -269,6 +304,16 @@ export default function AdminPanel({ token, onBack }) {
 
         {data && (
           <div className="admin-wrap">
+            <div className="blk-box blk-try no-print" style={{ marginBottom: 14 }}>
+              <span className="box-label">Tambah peserta baru</span>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 6 }}>
+                <input className="inp" placeholder="Nama lengkap" value={fNama} onChange={(e) => setFNama(e.target.value)} />
+                <input className="inp" placeholder="username" value={fUser} onChange={(e) => setFUser(e.target.value)} />
+                <input className="inp" placeholder="PIN (4–6 digit)" value={fPin} onChange={(e) => setFPin(e.target.value)} style={{ minWidth: 130 }} />
+                <button className="btn-primary" disabled={busyAkun} onClick={tambahAkun}>{busyAkun ? 'Menyimpan…' : 'Tambah'}</button>
+              </div>
+              {akunMsg && <p className="lesson-desc" style={{ margin: '8px 0 0' }}>{akunMsg}</p>}
+            </div>
             <table className="admin-tab">
               <thead>
                 <tr>

@@ -4,7 +4,7 @@ Aplikasi belajar komputer untuk warga — dari nol sampai siap kerja kantoran.
 created by **Mohammad Dimas Priambodo**
 
 ## Status
-- Versi: **1.2.0 · Lingkaran Mutu — Ulangan Pintar, Analitik Soal, Ekspor Excel**
+- Versi: **1.3.0 · Kelola & Kawal — Akun Peserta, Ujian Terkunci**
 - Produksi: Vercel (auto-build dari repo ini)
 - Backend: Supabase Edge Function `belajar-api` **v3** (login, me, ping, progress, overview, logout) — arsipnya di `supabase/functions/belajar-api/index.ts`
 - Database: tabel `belajar_*` (RLS deny-all; akses hanya lewat Edge Function) — arsip migrasi di `supabase/migrations/`
@@ -26,7 +26,7 @@ created by **Mohammad Dimas Priambodo**
 - PWA: bisa di-install di HP/laptop
 
 ## Cara deploy
-Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v1.2.0 · Lingkaran Mutu — Ulangan Pintar, Analitik Soal, Ekspor Excel**.
+Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa), Vercel akan build otomatis. Penanda sukses: footer beranda menunjukkan **v1.3.0 · Kelola & Kawal — Akun Peserta, Ujian Terkunci**.
 
 ## Keterbatasan yang diketahui (by design)
 - Ganti PIN dilakukan oleh admin lewat SQL (fitur ganti PIN mandiri sengaja tidak dibuat)
@@ -59,3 +59,7 @@ Upload ulang seluruh isi folder ini ke repo GitHub `lentera` (file lama tertimpa
 - **Ekspor rekap kini file Excel asli (.xlsx)** — bukan CSV lagi: header oranye tebal, baris judul beku, lebar kolom pas, angka sebagai angka. Tidak tergantung pengaturan regional Excel. Penulis .xlsx mandiri (tanpa pustaka tambahan).
 - **Ulangan Pintar per modul**: aplikasi kini mencatat soal mana yang dijawab salah (kuis bab & ujian teori). Kartu "Ulangan Pintar — N soal" muncul di halaman modul; soal yang dijawab benar terhapus dari daftar, sisanya muncul lagi sampai dikuasai. Tidak menyentuh nilai/percobaan resmi.
 - **Analitik "Soal tersulit"** di Panel Admin: peringkat soal yang paling sering disalahjawab lintas peserta — bahan langsung untuk merevisi materi.
+
+## Baru di v1.3.0 — Kelola & Kawal
+- **Kelola akun dari Panel Admin** (backend baru `belajar-admin`, fungsi inti tak tersentuh): form "Tambah peserta baru" (nama + username + PIN 4–6 digit, langsung aktif), tombol **Reset PIN** dan **Nonaktifkan/Aktifkan akun** di rapot tiap peserta. PIN di-hash bcrypt seperti sistem login lama; admin tidak bisa menonaktifkan dirinya sendiri.
+- **Mode ujian terkunci**: ujian teori berjalan satu layar penuh (fullscreen); pindah jendela/tab atau keluar dari layar penuh tercatat dan ditampilkan peringatan. Jumlah "keluar layar" tampil di rapot admin pada baris ujian — mengawal kejujuran tanpa menghukum otomatis. Ujian praktek sengaja TIDAK dikunci (peserta memang harus membuka Word/Excel/PowerPoint).

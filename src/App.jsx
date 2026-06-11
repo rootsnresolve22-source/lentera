@@ -249,10 +249,10 @@ export default function App() {
         <FinalTest
           test={entry.module.final}
           bestScore={progressMap[finalId]?.score ?? null}
-          onFinish={(score, passed, seconds, wrongIdx) =>
+          onFinish={(score, passed, seconds, wrongIdx, lockExits) =>
             saveProgress(finalId, passed ? 'selesai' : 'sedang', score, {
               seconds,
-              meta: { lastScore: score, wrongIdx, qcount: entry.module.final.questions.length },
+              meta: { lastScore: score, wrongIdx, qcount: entry.module.final.questions.length, lockExits },
             })
           }
           onBack={() => go('module', { moduleId: entry.module.id })}

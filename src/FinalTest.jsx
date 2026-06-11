@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Diagram } from './Illustrations'
 import { CountUp, Celebrate } from './Fx'
 
@@ -24,6 +24,26 @@ function prepare(questions) {
 export default function FinalTest({ test, bestScore, onFinish, onBack }) {
   // screen: 'intro' | 'soal' | 'hasil'
   const [screen, setScreen] = useState('intro')
+  const exitsRef = useRef(0)
+  const doneRef = useRef(false)
+  const [lockWarn, setLockWarn] = useState(false)
+
+  useEffect(() => {
+    if (screen !== 'soal') return
+    const catat = () => {
+      if (doneRef.current) return
+      exitsRef.current += 1
+      setLockWarn(true)
+    }
+    const vis = () => { if (document.hidden) catat() }
+    const fsc = () => { if (!document.fullscreenElement) catat() }
+    document.addEventListener('visibilitychange', vis)
+    document.addEventListener('fullscreenchange', fsc)
+    return () => {
+      document.removeEventListener('visibilitychange', vis)
+      document.removeEventListener('fullscreenchange', fsc)
+    }
+  }, [screen])
   const [items, setItems] = useState([])
   const [idx, setIdx] = useState(0)
   const [answers, setAnswers] = useState([])
@@ -36,6 +56,7 @@ export default function FinalTest({ test, bestScore, onFinish, onBack }) {
     setAnswers([])
     setResult(null)
     setStartAt(Date.now())
+    document.documentElement.requestFullscreen?.().catch(() => {})
     setScreen('soal')
     window.scrollTo(0, 0)
   }
@@ -56,7 +77,9 @@ export default function FinalTest({ test, bestScore, onFinish, onBack }) {
       .filter((a) => !a.correct)
       .map((a) => test.questions.indexOf(a.q))
       .filter((i) => i >= 0)
-    const saved = await onFinish(score, passed, seconds, wrongIdx)
+    doneRef.current = true
+    document.exitFullscreen?.().catch(() => {})
+    const saved = await onFinish(score, passed, seconds, wrongIdx, exitsRef.current)
     setAnswers(newAnswers)
     setResult({ score, right, passed, saved })
     setScreen('hasil')
@@ -81,7 +104,7 @@ export default function FinalTest({ test, bestScore, onFinish, onBack }) {
         )}
         <div className="lesson-cta">
           <button className="btn-primary" onClick={start}>Mulai ujian</button>
-          <p className="lesson-cta-note">Pastikan kamu sudah tenang dan siap. Tidak ada batas waktu, tapi setiap soal hanya satu kali jawab.</p>
+          <p className="lesson-cta-note">Pastikan kamu sudah tenang dan siap. Tidak ada batas waktu, tapi setiap soal hanya satu kali jawab. Ujian berjalan satu layar penuh — keluar dari layar ujian akan tercatat.</p>
         </div>
       </div>
     )
@@ -151,6 +174,14 @@ export default function FinalTest({ test, bestScore, onFinish, onBack }) {
       <div className="test-bar">
         <div className="test-bar-fill" style={{ width: `${(idx / items.length) * 100}%` }} />
       </div>
+      {lockWarn && (
+        <div className="quiz-fb fb-no no-print" role="alert">
+          Kamu keluar dari layar ujian — tercatat ({exitsRef.current}×).{' '}
+          <button className="btn-ghost btn-sm" onClick={() => { setLockWarn(false); document.documentElement.requestFullscreen?.().catch(() => {}) }}>
+            Kembali fokus (layar penuh)
+          </button>
+        </div>
+      )}
       <p className="quiz-q">
         <span className="quiz-no">Soal {idx + 1} dari {items.length}</span>
         {q.q}

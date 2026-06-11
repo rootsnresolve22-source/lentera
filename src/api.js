@@ -40,3 +40,26 @@ export const saveProgress = (token, item_id, status, score = null, extra = {}) =
 export const ping = (token) => request('ping', { method: 'POST', token })
 
 export const overview = (token) => request('overview', { token })
+
+// ===== Endpoint admin (fungsi terpisah: belajar-admin) =====
+const ADMIN_URL = API_URL.replace('belajar-api', 'belajar-admin')
+
+async function adminRequest(path, token, body) {
+  let res
+  try {
+    res = await fetch(`${ADMIN_URL}/${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-session': token },
+      body: JSON.stringify(body),
+    })
+  } catch (e) {
+    throw new Error('Tidak bisa terhubung. Periksa sinyal internetmu, lalu coba lagi.')
+  }
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) throw new Error(data.error || 'Terjadi kesalahan. Coba lagi.')
+  return data
+}
+
+export const adminCreateUser = (token, payload) => adminRequest('user-create', token, payload)
+export const adminSetPin = (token, user_id, pin) => adminRequest('user-pin', token, { user_id, pin })
+export const adminSetActive = (token, user_id, active) => adminRequest('user-active', token, { user_id, active })

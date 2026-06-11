@@ -1211,3 +1211,7 @@ kbd {
 .cert-line { width: 190px; height: 46px; border-bottom: 1.4px solid #1f2a33; margin-bottom: 5px; }
 .cert-note { font-size: 10.5px; color: #98a4ac; margin: 0; }
 @media print { .cert { border-color: #e8740c; } body { background: #fff; } }
+
+/* ===== Kelola akun (panel admin) ===== */
+.inp { padding: 9px 12px; border: 1.5px solid #c8d0d6; border-radius: 9px; font: inherit; min-width: 160px; background: #fff; }
+.inp:focus { outline: none; border-color: #e8740c; }
